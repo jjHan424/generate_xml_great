@@ -1,0 +1,158 @@
+<config>
+ <gen>
+   <beg> 2021-11-06 02:00:00 </beg>
+   <end> 2021-11-06 23:59:55 </end>
+   <sys> GPS GAL </sys>
+   <rec> SPT0 </rec>
+   <int> 30 </int>
+   <sat_rm> C01 C02 C03 C04 C05 C59 C60 C61 </sat_rm>
+   <est> FLT </est> 
+ </gen>
+
+ <inputs>
+   <rinexo>
+   .\data\obs_short_baseline\ONSA3100.21o
+   .\data\obs_short_baseline\ONS13100.21o
+   .\data\obs_short_baseline\SPT73100.21o
+   .\data\obs_short_baseline\SPT03100.21o
+   .\data\obs_short_baseline\IGMI3100.21o
+   .\data\obs_short_baseline\IGM23100.21o
+   .\data\obs_short_baseline\BOGE3100.21o
+   .\data\obs_short_baseline\BOGI3100.21o
+   </rinexo> 
+   <rinexn>  ./data/brdm3100.21n  </rinexn>
+   <rinexc>  ./data/gfz21826.clk  </rinexc>
+   <sp3>  ./data/gfz21826.sp3  </sp3>
+  <upd>
+  ./data/upd_nl_2021310_GEC
+  ./data/upd_wl_2021310_GEC
+  </upd>
+
+   <atx> E:\1Master_3\GREAT_INFO\BDS3\igs_absolute_14.atx </atx>
+   <blq> E:\1Master_3\GREAT_INFO\BDS3\oceanload </blq>
+   <de>  E:\1Master_3\GREAT_INFO\BDS3\jpleph_de405_great </de>
+   <eop> E:\1Master_3\GREAT_INFO\BDS3\poleut1 </eop>
+   <leapsecond> E:\1Master_3\GREAT_INFO\BDS3\leap_seconds </leapsecond>
+
+ </inputs>
+
+ <outputs append="false" verb="2">
+   <log name="FLOAT" type="BASIC" />
+   <ppp> Test/$(rec)-GEC-FLOAT.ppp  </ppp>
+   <flt> Test/$(rec)-GEC-FLOAT.flt  </flt>
+   <enu> Test/$(rec)-GEC-FLOAT.enu  </enu>
+   <aug> Test/$(rec)-GEC-FLOAT.aug  </aug>
+ </outputs>
+
+<process>
+		<frequency> 2 </frequency>
+	<realtime> FALSE </realtime>
+	<simulation> FALSE </simulation>
+	
+	<crd_constr> EST </crd_constr>
+	<phase> TRUE </phase>
+	<doppler> FALSE </doppler>
+	<tropo> TRUE </tropo>
+	<iono> TRUE </iono>
+	<gradient> FALSE </gradient>
+	<tropo_model> saastamoinen </tropo_model>
+	<tropo_mf> gmf </tropo_mf>
+	<sig_init_crd> 100 </sig_init_crd>
+	<sig_init_vel> 1 </sig_init_vel>
+	
+	<sig_init_ztd> 100 </sig_init_ztd>
+	<sig_init_amb> 10 </sig_init_amb>
+	<sig_init_gal> 10 </sig_init_gal> 
+	<sig_init_glo> 10 </sig_init_glo>
+	<sig_init_bds> 10 </sig_init_bds>
+	
+	<sig_init_vion> 100 </sig_init_vion>
+	<minimum_elev> 7 </minimum_elev> 
+	<obs_combination> RAW_ALL </obs_combination>
+	<max_res_norm> 3 </max_res_norm>
+	<pos_kin> FALSE </pos_kin>
+	<ion_model> SION </ion_model>
+	<obs_weight> SINEL </obs_weight>
+	<auto_band> FALSE </auto_band> 
+	<sd_sat> FALSE </sd_sat>
+	<min_sat> 4 </min_sat>
+	<slip_model> turboedit </slip_model>
+	<bds_code_bias_corr> true </bds_code_bias_corr>
+	<npp_model> PPP_RTK </npp_model> 
+	<CompAug> NO </CompAug>	
+	<ifb_model> EST_REC_IFB </ifb_model>
+	<ztd_model> STO </ztd_model>
+</process>
+<filter noise_vion="10" noise_crd = "0" rndwk_ztd = "3"/>
+<npp>
+		<comp_aug> NO </comp_aug>
+		<grid_aug> NO </grid_aug>
+        <ipp_out> YES </ipp_out>
+		<ZTD_OUT> TRUE </ZTD_OUT>
+	</npp>
+<receiver>
+      
+</receiver>
+
+
+ <parameters>
+
+</parameters>
+
+<turboedit lite_mode="true">
+ <ephemeris valid="true" /> 
+ <check_mw mw_limit="2.0" valid="true" />
+ <check_gf gf_limit="0.05" valid="true" />
+ <smooth_win value="25" />
+ <check_gap gap_limit="60" valid="true" />
+</turboedit>
+
+
+<ambiguity>  
+   <fix_mode> NO </fix_mode>       
+   <ratio> 2 </ratio>            
+   <part_fix> YES </part_fix>    
+   <set_refsat> YES </set_refsat>   
+   <apply_irc> NO </apply_irc>     
+   <add_leo> NO </add_leo>
+   <part_fix_num> 3 </part_fix_num>
+   <all_baselines> NO </all_baselines>
+   <min_common_time> 0 </min_common_time>                 
+   <baseline_length_limit> 3500 </baseline_length_limit>   
+   <widelane_interval> 30 </widelane_interval>               
+   <widelane_decision alpha="1000" maxdev="0.275" maxsig="0.10" />   
+   <narrowlane_decision alpha="1000" maxdev="0.30" maxsig="0.10" />    
+   <refixsettings last_fix_gap="20" min_fixed_num="3" />
+   <reset_amb_ppprtk> NO </reset_amb_ppprtk>
+   <clear_flag> YES </clear_flag>
+   <full_fix_num> 4 </full_fix_num>
+   <FixFixSep> 0.5 </FixFixSep>
+   <FloatFixSep> 5.0 </FloatFixSep>   
+ </ambiguity>
+
+
+ <bds sigma_C="0.6" sigma_L="0.01">
+ <freq> 1 2</freq>
+ <band> 2 6</band>
+ </bds>
+
+ <gps sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2</freq>
+  <band> 1 2</band>
+ </gps>
+ 
+ <gal sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2</freq>
+  <band> 1 5</band>
+ </gal>
+ 
+ <glo sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 2 </band>
+ </glo>
+ 
+ <qzs sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 2 </band>
+ </qzs>
+</config>

@@ -12,13 +12,14 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-Aug2Grid.xml"
+    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
-    XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-Aug2Grid.xml"
+    XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 import great2_generate_xml as gen_xml
 import Linux_Win_HJJ as Run
-PURPOSE = "AUG2GRID"
+PURPOSE = "PPPRTKServer"
+
 ##----------Python Log----------##
 ##----------SET 1----------##
 work_dir = r"/Users/hanjunjie/Master_3/XML_py_test"
@@ -27,7 +28,7 @@ cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
 ##----------SET 2 (ARGV)----------##
-if len(sys.argv) < 12:
+if len(sys.argv) < 11:
     logging.error("Not Enough argv! Please Check")
     logging.error("USAGE: year doy hour s_length system sampling count area grid_mode rm_site ck_site\
                   \2021 310 2 79195 GEC3 30 1 EPN_GER ChkSite XXXX_XXXX XXXX_XXXX")
@@ -40,35 +41,27 @@ s_length = sys.argv[4]
 cur_sys = sys.argv[5]
 sampling = sys.argv[6] # "30" or "5"
 count = sys.argv[7]
-#NPP
-area = sys.argv[8]
-grid_mode = sys.argv[9]
-rm_site = sys.argv[10]
-ck_site = sys.argv[11]
+#PPP
+site = sys.argv[8]
+amb = sys.argv[9]
+reset_par = sys.argv[10]
 #site list generate
-rm_site_list,ck_site_list = [],[]
-site_temp = rm_site.split("_")
+site_list = []
+site_temp = site.split("_")
 for cur_site in site_temp:
     if cur_site != "NONE":
-        rm_site_list.append(cur_site)
-site_temp = ck_site.split("_")
-for cur_site in site_temp:
-    if cur_site != "NONE":
-        ck_site_list.append(cur_site)
-if grid_mode.upper() == "CHKCROSS":
-    ck_site_list = ["CROSS"]
-
-
-# SET AREA
-if area == "EPN_GER":
-    aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
-    site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
-    Mask = "EPN_GER"
-    RefLon,RefLat = 3.4,53.36
-    SpaceLon,SpaceLat = 1.5,1.5
-    CountLon,CountLat = 6,4
+        site_list.append(cur_site)
+if amb == "YES":
+    amb = "FIXED"
 else:
-    sys.exit()
+    amb = "FLOAT"
+
+# SET PATH
+upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
+nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
+sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
+clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
@@ -83,18 +76,32 @@ while count_int > 0:
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     #Copy XML File
-    cur_xml_name = "great-Aug2Grid-{}-{:0>4}-{:0>3}.xml".format(area,year_int,doy_int)
+    cur_xml_name = "great-AUG-{}-{:0>4}-{:0>3}.xml".format(amb,year_int,doy_int)
     shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
     #Change Gen
     gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
-    #Change ionogrid
-    gen_xml.change_ionogrid(cur_xml_name,area,grid_mode,[RefLat,RefLon],[SpaceLat,SpaceLon],[CountLat,CountLon],rm_site_list,ck_site_list)
-    #Change input aug
-    gen_xml.change_inputs_aug(cur_xml_name,aug_path,year_int,doy_int,int(hour),int(s_length),site_list)
+    #Change AMB
+    if amb == "FIXED":
+        gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","SEARCH")
+        gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
+    else:
+        gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","NO")
+    # Change input obs
+    gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),site_list)
+    # Change input nav
+    gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
+    # Change input sp3clk
+    gen_xml.change_inputs_sp3clk(cur_xml_name,"brdm",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
+    # Change system file
+    gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
     #Change outputs auggrid
-    gen_xml.change_outputs_aug2grid(cur_xml_name,area,rm_site_list,ck_site_list,cur_sys,int(sampling))
+    gen_xml.change_outputs_aug(cur_xml_name,amb,cur_sys,int(sampling),int(reset_par))
     #Change outputs log
     gen_xml.change_outputs_log(cur_xml_name,PURPOSE)
+    #Change filter any
+    gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
+    #Change receiver
+    gen_xml.reset_receiver_parameter(cur_xml_name,site_list)
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     #Start the Programe

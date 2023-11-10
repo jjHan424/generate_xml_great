@@ -5,6 +5,7 @@ import sys
 from xml.dom.minidom import parse
 import xml.dom.minidom
 import xml.etree.ElementTree as et
+from xml.etree.ElementTree import Element
 import logging
 import platform
 from datetime import datetime
@@ -17,6 +18,8 @@ from PodItera_Batch import doy2ymd
 from PodItera_Batch import ymd2gpsweek
 from PodItera_Batch import ymd2gpsweekday
 import Linux_Win_HJJ as run_mkdir
+
+
 
 def change_gen_time(xml_file,year,doy,hour,s_length):
     tree = et.parse(xml_file)
@@ -124,6 +127,95 @@ def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, 
         count_day = count_day + 1
     tree.write(xmlfile)
 
+#Change XML inputs abs
+def change_inputs_obs(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""]):
+    tree = et.parse(xmlfile)
+    inputs_obs = tree.getroot().find("inputs").find("rinexo")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_obs.text = "\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        for cur_site in site_list:
+            inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"{:0>3}".format(day),"{}{:0>3}0.{:0>2}o".format(cur_site,day,yy)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+#Change XML inputs nav
+def change_inputs_nav(xmlfile = "great2.1.xml",office = "brdm",nav_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+    tree = et.parse(xmlfile)
+    inputs_nav = tree.getroot().find("inputs").find("rinexn")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_nav.text = "\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        inputs_nav.text = inputs_nav.text + "     " + os.path.join(nav_dir,"{}{:0>3}.{:0>2}n".format(office,day,yy)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+#Change XML inputs sp3clk
+def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "default",clk_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+    tree = et.parse(xmlfile)
+    inputs_sp3 = tree.getroot().find("inputs").find("sp3")
+    inputs_clk = tree.getroot().find("inputs").find("rinexc")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_sp3.text,inputs_clk.text = "\n","\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        y_temp,mon,date = doy2ymd(int(year),int(day))
+        week = ymd2gpsweekday(int(year),mon,date)
+        inputs_sp3.text = inputs_sp3.text + "     " + os.path.join(sp3_dir,"{}{:5d}.sp3".format(office,week)) + "\n"
+        inputs_clk.text = inputs_clk.text + "     " + os.path.join(clk_dir,"{}{:5d}.sp3".format(office,week)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+#Change XML inputs sp3clk
+def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
+    tree = et.parse(xmlfile)
+    inputs_atx = tree.getroot().find("inputs").find("atx")
+    inputs_blq = tree.getroot().find("inputs").find("dlq")
+    inputs_de = tree.getroot().find("inputs").find("de")
+    inputs_eop = tree.getroot().find("inputs").find("eop")
+    inputs_lep = tree.getroot().find("inputs").find("leapsecond")
+    if cur_platform == "Darwin":
+        print("WAIT")
+    else:
+        inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
+        inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
+        inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
+        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1"
+        inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+    tree.write(xmlfile)
+
 #Change XML outputs log
 def change_outputs_log(xmlfile = "great2.1.xml",purpose = "ByHjj",mode = "TIME"):
     tree = et.parse(xmlfile)
@@ -152,4 +244,86 @@ def change_outputs_aug2grid(xmlfile = "great2.1.xml",area = "XXXX",rm_site_list=
     output_dir = output_dir[:-1]
     run_mkdir.mkdir(output_dir)
     outputs_aug.text = os.path.join(outputs_aug.text,"$(rec)-{}-{:d}.aug".format(cur_sys,sampling))
+    tree.write(xmlfile)
+
+#Change XML outputs aug
+def change_outputs_aug(xmlfile = "great2.1.xml",amb = "XXXX",cur_sys = "GEC",sampling = 5,reset_par = 0):
+    tree = et.parse(xmlfile)
+    outputs_ppp = tree.getroot().find("outputs").find("ppp")
+    outputs_flt = tree.getroot().find("outputs").find("flt")
+    outputs_enu = tree.getroot().find("outputs").find("enu")
+    outputs_aug = tree.getroot().find("outputs").find("aug")
+    
+    run_mkdir.mkdir("server")
+    if reset_par == 0:
+        outputs_ppp.text = os.path.join("server","$(rec)-{}-{}-{:d}.ppp".format(cur_sys,amb,sampling))
+        outputs_flt.text = os.path.join("server","$(rec)-{}-{}-{:d}.flt".format(cur_sys,amb,sampling))
+        outputs_enu.text = os.path.join("server","$(rec)-{}-{}-{:d}.enu".format(cur_sys,amb,sampling))
+        outputs_aug.text = os.path.join("server","$(rec)-{}-{}-{:d}.aug".format(cur_sys,amb,sampling))
+    else:
+        outputs_ppp.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.ppp".format(cur_sys,amb,sampling,reset_par))
+        outputs_flt.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.flt".format(cur_sys,amb,sampling,reset_par))
+        outputs_enu.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.enu".format(cur_sys,amb,sampling,reset_par))
+        outputs_aug.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.aug".format(cur_sys,amb,sampling,reset_par))
+    tree.write(xmlfile)
+
+#Change XML anywhere with string
+def change_node_subnode_string(xmlfile = "great2.1.xml",node = "ambiguity",subnode = "fix_mode",data = "NO"):
+    tree = et.parse(xmlfile)
+    outputs_aug = tree.getroot().find(node).find(subnode).text = " " + data + " "
+    tree.write(xmlfile)
+
+#Change XML inputs upd
+def change_inputs_upd(xmlfile = "great2.1.xml",upd_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+    tree = et.parse(xmlfile)
+    inputs_upd = tree.getroot().find("inputs").find("upd")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_upd.text = "\n"
+    while (count_day < day_length):
+        day = doy + count_day
+        inputs_upd.text = inputs_upd.text + "     " + os.path.join(upd_dir,"upd_wl_{:0>4}{:0>3}_GEC".format(year,day)) + "\n"
+        inputs_upd.text = inputs_upd.text + "     " + os.path.join(upd_dir,"upd_nl_{:0>4}{:0>3}_GEC".format(year,day)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+#Change XML filter any
+def change_filter_anystring(xmlfile = "great2.1.xml",attribt = "reset_par",data = "0"):
+    tree = et.parse(xmlfile)
+    outputs_filter = tree.getroot().find("filter")
+    outputs_filter.attrib[attribt] = data
+    tree.write(xmlfile)
+
+#Reset XML receiver and parameter to 0
+def reset_receiver_parameter(xmlfile = "great2.1.xml",site_list = [""]):
+    tree = et.parse(xmlfile)
+    outputs_receiver = tree.getroot().find("receiver")
+    outputs_parameters = tree.getroot().find("parameters")
+    for cur_site in site_list:
+        cur_site_rec = Element("rec")
+        cur_site_rec.attrib["id"] = cur_site
+        cur_site_rec.attrib["X"] = "{:>8.4f}".format(0)
+        cur_site_rec.attrib["Y"] = "{:>8.4f}".format(0)
+        cur_site_rec.attrib["Z"] = "{:>8.4f}".format(0)
+        cur_site_rec.tail = "\n"
+        outputs_receiver.append(cur_site_rec)
+
+        cur_site_rec = Element("STA")
+        cur_site_rec.attrib["ID"] = cur_site
+        cur_site_rec.attrib["sigCLK"] = "9000"
+        cur_site_rec.attrib["sigPOS"] = "100_100_100"
+        cur_site_rec.attrib["sigSION"] = "9000"
+        cur_site_rec.attrib["sigTropPd"] = "0.015"
+        cur_site_rec.attrib["sigZTD"] = "0.201"
+        cur_site_rec.tail = "\n"
+        outputs_parameters.append(cur_site_rec)
+    
     tree.write(xmlfile)
