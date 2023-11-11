@@ -97,7 +97,7 @@ while count_int > 0:
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     #Copy XML File
-    cur_xml_name = "great-Aug2Grid-{}-R-{}-{:0>4}-{:0>3}.xml".format(area,rm_site_list,year_int,doy_int)
+    cur_xml_name = "great-Aug2Grid-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(area,rm_site_list,year_int,doy_int,cur_time.minute,cur_time.second)
     shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
     #Change Gen
     gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
@@ -109,6 +109,8 @@ while count_int > 0:
     gen_xml.change_outputs_aug2grid(cur_xml_name,area,rm_site_list,ck_site_list,cur_sys,int(sampling))
     #Change outputs log
     gen_xml.change_outputs_log(cur_xml_name,PURPOSE)
+    if area == "EPN2":
+        gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","bias_baseline","500")
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     #--------Start the Programe--------#
