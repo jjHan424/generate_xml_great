@@ -259,6 +259,7 @@ def change_outputs_aug2grid(xmlfile = "great2.1.xml",area = "XXXX",rm_site_list=
         outputs_aug.text = outputs_aug.text + cur_site + "-"
         output_dir = output_dir + cur_site + "-"
     outputs_aug.text = outputs_aug.text + "C-"
+    output_dir = output_dir + "C-"
     for cur_site in ck_site_list:
         outputs_aug.text = outputs_aug.text + cur_site + "-"
         output_dir = output_dir + cur_site + "-"
