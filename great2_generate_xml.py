@@ -194,7 +194,7 @@ def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "defa
         y_temp,mon,date = doy2ymd(int(year),int(day))
         week = ymd2gpsweekday(int(year),mon,date)
         inputs_sp3.text = inputs_sp3.text + "     " + os.path.join(sp3_dir,"{}{:5d}.sp3".format(office,week)) + "\n"
-        inputs_clk.text = inputs_clk.text + "     " + os.path.join(clk_dir,"{}{:5d}.sp3".format(office,week)) + "\n"
+        inputs_clk.text = inputs_clk.text + "     " + os.path.join(clk_dir,"{}{:5d}.clk".format(office,week)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 

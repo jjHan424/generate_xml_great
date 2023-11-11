@@ -1,0 +1,19 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            // "args": ["2021","310","0","86395","GEC","5","1","EPN_GER","ChkCross","NONE","NONE"] //For Aug2Grid
+            // "args": ["2021","310","2","86395","GEC3","30","1","HKSC_HKLL","NO","0"] //For AUG
+            "args": ["2021","310","2","86395","GEC3","30","1","HKSC","ChkCrosss","0"] //For Client
+        }
+    ]
+}

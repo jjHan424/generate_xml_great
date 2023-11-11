@@ -91,7 +91,7 @@ while count_int > 0:
     # Change input nav
     gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
     # Change input sp3clk
-    gen_xml.change_inputs_sp3clk(cur_xml_name,"brdm",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
+    gen_xml.change_inputs_sp3clk(cur_xml_name,"gfz",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
     # Change system file
     gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
     #Change outputs auggrid
