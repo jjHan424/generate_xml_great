@@ -22,8 +22,8 @@ PURPOSE = "PPPRTKServer"
 
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid230629/build_Linux/Bin"
+work_dir = r"/cache/hanjunjie/Project/C-ZTD/ZTD_PPP"
+software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -108,7 +108,7 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     ##--------Start the Programe#--------##
-    # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 

@@ -114,7 +114,7 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     #--------Start the Programe--------#
-    #Run.run_app(software,"GREAT_Aug2Grid",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    Run.run_app(software,"GREAT_Aug2Grid",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
