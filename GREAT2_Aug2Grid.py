@@ -97,7 +97,7 @@ while count_int > 0:
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     #Copy XML File
-    cur_xml_name = "great-Aug2Grid-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(area,rm_site_list,year_int,doy_int,cur_time.minute,cur_time.second)
+    cur_xml_name = "great-Aug2Grid-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(area,year_int,doy_int,cur_time.minute,cur_time.second)
     shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
     #Change Gen
     gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
