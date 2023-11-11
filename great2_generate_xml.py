@@ -198,6 +198,28 @@ def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "defa
         count_day = count_day + 1
     tree.write(xmlfile)
 
+#Change XML inputs auggrid
+def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+    tree = et.parse(xmlfile)
+    inputs_auggrid = tree.getroot().find("inputs").find("aug_grid")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_auggrid.text = "\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{}{}".format(year,day),"GREAT-GEC3-30.grid") + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
 #Change XML inputs sp3clk
 def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     tree = et.parse(xmlfile)
@@ -246,7 +268,7 @@ def change_outputs_aug2grid(xmlfile = "great2.1.xml",area = "XXXX",rm_site_list=
     outputs_aug.text = os.path.join(outputs_aug.text,"$(rec)-{}-{:d}.aug".format(cur_sys,sampling))
     tree.write(xmlfile)
 
-#Change XML outputs aug
+#Change XML outputs for Server of PPPRTK (ppp flt enu aug)
 def change_outputs_aug(xmlfile = "great2.1.xml",amb = "XXXX",cur_sys = "GEC",sampling = 5,reset_par = 0):
     tree = et.parse(xmlfile)
     outputs_ppp = tree.getroot().find("outputs").find("ppp")
@@ -265,6 +287,21 @@ def change_outputs_aug(xmlfile = "great2.1.xml",amb = "XXXX",cur_sys = "GEC",sam
         outputs_flt.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.flt".format(cur_sys,amb,sampling,reset_par))
         outputs_enu.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.enu".format(cur_sys,amb,sampling,reset_par))
         outputs_aug.text = os.path.join("server","$(rec)-{}-{}-{:d}-{}.aug".format(cur_sys,amb,sampling,reset_par))
+    tree.write(xmlfile)
+
+#Change XML outputs for Client of PPPRTK (flt aug)
+def change_outputs_client(xmlfile = "great2.1.xml",amb = "XXXX",cur_sys = "GEC",sampling = 5,reset_par = 0):
+    tree = et.parse(xmlfile)
+    outputs_flt = tree.getroot().find("outputs").find("flt")
+    outputs_aug = tree.getroot().find("outputs").find("aug")
+    
+    run_mkdir.mkdir("client")
+    if reset_par == 0:
+        outputs_flt.text = os.path.join("client","$(rec)-{}-{}-{:d}.flt".format(cur_sys,amb,sampling))
+        outputs_aug.text = os.path.join("client","$(rec)-{}-{}-{:d}.aug".format(cur_sys,amb,sampling))
+    else:
+        outputs_flt.text = os.path.join("client","$(rec)-{}-{}-{:d}-{}.flt".format(cur_sys,amb,sampling,reset_par))
+        outputs_aug.text = os.path.join("client","$(rec)-{}-{}-{:d}-{}.aug".format(cur_sys,amb,sampling,reset_par))
     tree.write(xmlfile)
 
 #Change XML anywhere with string
