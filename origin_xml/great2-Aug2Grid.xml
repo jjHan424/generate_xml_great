@@ -97,7 +97,7 @@
 		<bias_sigma> 0 </bias_sigma>		<!-- Bias观测方程选取阈值 -->
 		<bias_wgt> SIGMA </bias_wgt>
         <bias_res> 1000000000 </bias_res>
-		<bias_baseline> 150 </bias_baseline><!-- Bias观测方程最近测站选取阈值 -->
+		<bias_baseline> 300 </bias_baseline><!-- Bias观测方程最近测站选取阈值 -->
     <!-- Weight for Client Set -->
 		<wgt_mode> ChkCross </wgt_mode>
 		<rec_chk> WUDA </rec_chk>
