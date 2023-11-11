@@ -224,7 +224,7 @@ def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2
 def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     tree = et.parse(xmlfile)
     inputs_atx = tree.getroot().find("inputs").find("atx")
-    inputs_blq = tree.getroot().find("inputs").find("dlq")
+    inputs_blq = tree.getroot().find("inputs").find("blq")
     inputs_de = tree.getroot().find("inputs").find("de")
     inputs_eop = tree.getroot().find("inputs").find("eop")
     inputs_lep = tree.getroot().find("inputs").find("leapsecond")
