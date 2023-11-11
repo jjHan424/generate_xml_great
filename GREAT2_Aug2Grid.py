@@ -21,8 +21,8 @@ import Linux_Win_HJJ as Run
 PURPOSE = "AUG2GRID"
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/Users/hanjunjie/Master_3/XML_py_test"
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid230629/build_Linux/Bin"
+work_dir = r"/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -67,6 +67,20 @@ if area == "EPN_GER":
     RefLon,RefLat = 3.4,53.36
     SpaceLon,SpaceLat = 1.5,1.5
     CountLon,CountLat = 6,4
+elif area == "EPN1":
+    aug_path = "/cache/hanjunjie/Project/C-ZTD/AUG"
+    site_list = ["ONSA","ONS1","SPT7","SPT0","VAE6","NOR7","JON6","OSK6","SULD"]
+    Mask = "EPN1"
+    RefLon,RefLat = 10.7,59.2
+    SpaceLon,SpaceLat = 1.5,1.5
+    CountLon,CountLat = 6,3
+elif area == "EPN2":
+    aug_path = "/cache/hanjunjie/Project/C-ZTD/AUG"
+    site_list = ["PASA","SCOA","TLMF","TLSG","TLSE","ESCO","LLIV","BELL","EBRE","CREU","CASE"]
+    Mask = "EPN2"
+    RefLon,RefLat = -2.0,44.1
+    SpaceLon,SpaceLat = 1.5,1.5
+    CountLon,CountLat = 5,4
 else:
     sys.exit()
 
@@ -83,7 +97,7 @@ while count_int > 0:
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     #Copy XML File
-    cur_xml_name = "great-Aug2Grid-{}-{:0>4}-{:0>3}.xml".format(area,year_int,doy_int)
+    cur_xml_name = "great-Aug2Grid-{}-R-{}-{:0>4}-{:0>3}.xml".format(area,rm_site_list,year_int,doy_int)
     shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
     #Change Gen
     gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
@@ -98,7 +112,7 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     #--------Start the Programe--------#
-    # Run.run_app(software,"GREAT_Aug2Grid",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    #Run.run_app(software,"GREAT_Aug2Grid",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
