@@ -199,7 +199,7 @@ def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "defa
     tree.write(xmlfile)
 
 #Change XML inputs auggrid
-def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395,cur_site = "HKSC",area = "HK"):
     tree = et.parse(xmlfile)
     inputs_auggrid = tree.getroot().find("inputs").find("aug_grid")
     day_length = 1
@@ -216,7 +216,7 @@ def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2
     yy = year - 2000
     while (count_day < day_length):
         day = doy + count_day
-        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{}{}".format(year,day),"GREAT-GEC3-30.grid") + "\n"
+        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{}{}".format(year,day),"{}-R-{}-C-CROSS".format(area,cur_site),"GREAT-GEC3-30.grid") + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 

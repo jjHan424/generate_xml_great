@@ -62,6 +62,10 @@ clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
 aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 
+client_EPN1 = ["ONSA","ONS1","SPT7","SPT0"]
+client_EPN2 = ["TLMF","TLSE","EBRE"]
+client_EPN_GER = ["PTBB","REDU","KOS1"]
+
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
 while count_int > 0:
@@ -74,40 +78,50 @@ while count_int > 0:
         os.mkdir(cur_dir)
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
-    #Copy XML File
-    cur_xml_name = "great-PPPRTK-{}-{:0>4}-{:0>3}.xml".format("FIXED",year_int,doy_int)
-    shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
-    #Change Gen
-    gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
-    #Change AMB and Inputs UPD
-    gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","SEARCH")
-    gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
-    gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","wgt_mode",aug_mode)
-    # Change input obs
-    gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),site_list)
-    # Change input nav
-    gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
-    # Change input sp3clk
-    gen_xml.change_inputs_sp3clk(cur_xml_name,"brdm",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
-    # Change input auggrid
-    gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length))
-    # Change system file
-    gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
-    #Change outputs auggrid
-    # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
-    gen_xml.change_outputs_client(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
-    #Change outputs log
-    gen_xml.change_outputs_log(cur_xml_name,site_list[0])
-    #Change filter any
-    gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
-    #Change receiver
-    gen_xml.reset_receiver_parameter(cur_xml_name,site_list)
-    #Change for ZTD out
-    gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
-    logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
-    logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
-    ##--------Start the Programe#--------##
-    # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    # For Multi Sites
+    for cur_site in site_list:
+        #Copy XML File
+        cur_xml_name = "great-PPPRTK-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(cur_site,year_int,doy_int,cur_time.minute,cur_time.second)
+        shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
+        #Change Gen
+        gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),[cur_site])
+        #Change AMB and Inputs UPD
+        gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","SEARCH")
+        gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
+        gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","wgt_mode",aug_mode)
+        # Change input obs
+        gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),[cur_site])
+        # Change input nav
+        gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
+        # Change input sp3clk
+        gen_xml.change_inputs_sp3clk(cur_xml_name,"gfz",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
+        # Change input auggrid
+        if cur_site in client_EPN1:
+            area = "EPN1"
+        elif cur_site in client_EPN2:
+            area = "EPN2"
+        elif cur_site in client_EPN_GER:
+            area = "EPN_GER"
+        else:
+            sys.exit()
+        gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length),cur_site,area)
+        # Change system file
+        gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
+        #Change outputs auggrid
+        # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
+        gen_xml.change_outputs_client(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
+        #Change outputs log
+        gen_xml.change_outputs_log(cur_xml_name,site_list[0])
+        #Change filter any
+        gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
+        #Change receiver
+        gen_xml.reset_receiver_parameter(cur_xml_name,site_list)
+        #Change for ZTD out
+        gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
+        logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
+        logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
+        ##--------Start the Programe#--------##
+        # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
