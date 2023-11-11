@@ -22,7 +22,7 @@ PURPOSE = "PPPRTKServer"
 
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/Users/hanjunjie/Master_3/XML_py_test"
+work_dir = r"/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid230629/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
@@ -76,7 +76,7 @@ while count_int > 0:
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     #Copy XML File
-    cur_xml_name = "great-AUG-{}-{:0>4}-{:0>3}.xml".format(amb,year_int,doy_int)
+    cur_xml_name = "great-AUG-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(amb,year_int,doy_int,cur_time.minute,cur_time.second)
     shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
     #Change Gen
     gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
