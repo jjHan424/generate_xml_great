@@ -245,6 +245,8 @@ def change_outputs_log(xmlfile = "great2.1.xml",purpose = "ByHjj",mode = "TIME")
     cur_time = datetime.utcnow()
     if mode == "TIME":
         outputs_log.attrib["name"] = "{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}".format(purpose,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second)
+    else:
+        outputs_log.attrib["name"] = "{}-{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}".format(purpose,mode,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second)
     tree.write(xmlfile)
  
  #Change XML outputs aug
