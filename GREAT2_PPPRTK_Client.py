@@ -85,6 +85,7 @@ while count_int > 0:
         shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
         #Change Gen
         gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),[cur_site])
+        gen_xml.change_node_subnode_string(cur_xml_name,"gen","rover",cur_site)
         #Change AMB and Inputs UPD
         gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","SEARCH")
         gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
@@ -111,11 +112,11 @@ while count_int > 0:
         # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
         gen_xml.change_outputs_client(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
         #Change outputs log
-        gen_xml.change_outputs_log(cur_xml_name,site_list[0])
+        gen_xml.change_outputs_log(cur_xml_name,cur_site)
         #Change filter any
         gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
         #Change receiver
-        gen_xml.reset_receiver_parameter(cur_xml_name,site_list)
+        gen_xml.reset_receiver_parameter(cur_xml_name,[cur_site])
         #Change for ZTD out
         gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
         logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
