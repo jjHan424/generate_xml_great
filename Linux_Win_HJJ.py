@@ -29,6 +29,6 @@ def run_app(app_dir,app_name,xml_path,log_dir="./",log_name="./py.log"):
 
 def mkdir(dir):
     if os.path.exists(dir):
-        logging.warning("This workdir {} is exist".format(dir))
+        i=1
     else:
-        os.mkdir(dir)
+        os.makedirs(dir)
