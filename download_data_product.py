@@ -50,7 +50,8 @@ def gzip(local,file_name_gz,file_name):
         result = subprocess.getstatusoutput(cmd)
         if (os.path.exists(file_name_gz[:-3]) and file_name != file_name_gz[:-3]):
             os.rename(file_name_gz[:-3],file_name)
-        os.remove(file_name_gz)
+        if (os.path.exists(file_name_gz))
+            os.remove(file_name_gz)
     except OSError:
         logging.error("run failed for throw except.")
         sys.exit()
