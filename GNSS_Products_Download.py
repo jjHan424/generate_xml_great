@@ -29,10 +29,13 @@ year = sys.argv[1]
 doy = sys.argv[2]
 count = sys.argv[3]
 download_mode = sys.argv[4].split("_")
+
 if "ZTD" in download_mode or "OBS" in download_mode:
     site_list = sys.argv[5].split("_")
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
+
+
 while count_int > 0:
     if "ZTD" in download_mode:
         for cur_site in site_list:

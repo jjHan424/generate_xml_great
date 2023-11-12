@@ -42,11 +42,14 @@ def download(source,file_name_gz,local):
         logging.error("run failed for throw except.")
         sys.exit()
 
-def gzip(local,file_name_gz):
+def gzip(local,file_name_gz,file_name):
     os.chdir(local)
     cmd = "gunzip -f {}".format(file_name_gz)
     try:
         result = subprocess.getstatusoutput(cmd)
+        if (os.path.exists(file_name_gz[:-3])):
+            os.rename(file_name_gz[:-3],file_name)
+        os.remove(file_name_gz)
     except OSError:
         logging.error("run failed for throw except.")
         sys.exit()
@@ -60,13 +63,19 @@ def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_s
         y_temp,mon,date = doy2ymd((year),(doy))
         weekd = ymd2gpsweekday(int(year),mon,date)
         week = int(weekd/10)
+        # Different time different name
         if week <= 2237:
             file_name_gz = "{}{:0>3}0.{:0>2}zpd.gz".format(cur_site.lower(),doy,yy)
             source_file = source_raw + "/gnss/products/troposphere/zpd/{:0>4}/{:0>3}".format(year,doy)
         else:
             source_file = source_raw + "/gnss/products/troposphere/zpd/{:0>4}/IGS0OPSFIN_YYYYDDDHHMM_01D)05M_SITENAME_TRO.TRO.gz".format(year,doy,cur_site.lower(),doy,yy)
+        
         if (download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz)
+            gzip(save_dir,file_name_gz,file_name)
+        else:
+            logging.error("ZTD for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
+        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            logging.error("ZTD for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
     else:
         logging.warn("This File {} exits!!!".format(file_name))
     # gzip("H","/Users/hanjunjie/Master_3")
