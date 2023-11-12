@@ -48,7 +48,7 @@ def gzip(local,file_name_gz,file_name):
     cmd = "gunzip -f {}".format(file_name_gz)
     try:
         result = subprocess.getstatusoutput(cmd)
-        if (os.path.exists(file_name_gz[:-3]) and not os.path.exists(file_name)):
+        if (os.path.exists(file_name_gz[:-3]) and file_name != file_name_gz[:-3]):
             os.rename(file_name_gz[:-3],file_name)
         os.remove(file_name_gz)
     except OSError:
