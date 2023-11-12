@@ -34,6 +34,7 @@ def download(source,file_name_gz,local):
     cmd = "curl -c .urs_cookies -b .urs_cookies -n -L {} -O".format(source+"/"+file_name_gz)
     try:
         result = subprocess.getstatusoutput(cmd)
+        os.remove(".urs_cookies")
         if (os.path.exists(file_name_gz)):
             return True
         else:
@@ -47,7 +48,7 @@ def gzip(local,file_name_gz,file_name):
     cmd = "gunzip -f {}".format(file_name_gz)
     try:
         result = subprocess.getstatusoutput(cmd)
-        if (os.path.exists(file_name_gz[:-3])):
+        if (os.path.exists(file_name_gz[:-3]) and not os.path.exists(file_name)):
             os.rename(file_name_gz[:-3],file_name)
         os.remove(file_name_gz)
     except OSError:
