@@ -40,7 +40,7 @@ def download(source,file_name_gz,local):
         else:
             return False
     except OSError:
-        logging.error("run failed for throw except.")
+        logging.error("download failed for throw except!!!")
         sys.exit()
 
 def gzip(local,file_name_gz,file_name):
@@ -48,14 +48,17 @@ def gzip(local,file_name_gz,file_name):
     cmd = "gunzip -f {}".format(file_name_gz)
     try:
         result = subprocess.getstatusoutput(cmd)
-        if (os.path.exists(file_name_gz[:-3]) and file_name != file_name_gz[:-3]):
-            os.rename(file_name_gz[:-3],file_name)
+        file_name_gz_value = file_name_gz.split(".")
+        file_name_gz_after_gz = file_name_gz_value[0]+"." + file_name_gz_value[1]
+        if (os.path.exists(file_name_gz_after_gz) and file_name != file_name_gz_after_gz):
+            os.rename(file_name_gz_after_gz,file_name)
         if (os.path.exists(file_name_gz)):
             os.remove(file_name_gz)
     except OSError:
-        logging.error("run failed for throw except.")
+        logging.error("gzip failed for throw except!!!")
         sys.exit()
 
+# Download ZPD File with one site
 def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX"):
     save_dir = os.path.join(data_save,"{:0>4}".format(year),"ZTD","{:0>3}".format(doy))
     LH.mkdir(save_dir)
@@ -80,4 +83,91 @@ def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_s
             logging.error("ZTD for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
     else:
         logging.warn("This File {} exits!!!".format(file_name))
-    # gzip("H","/Users/hanjunjie/Master_3")
+
+# Download broadcast ephemeris
+def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,cur_nav = "brdm"):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"NAV")
+    LH.mkdir(save_dir)
+    yy = year-2000
+    file_name = "{}{:0>3}0.{:2d}n".format(cur_nav.lower(),doy,yy)
+    if (not os.path.exists(os.path.join(save_dir,file_name))):
+        y_temp,mon,date = doy2ymd((year),(doy))
+        weekd = ymd2gpsweekday(int(year),mon,date)
+        week = int(weekd/10)
+        # Different time different name and location just for WHU igs long name
+        file_name_gz = "BRDM00DLR_S_{:0>4}{:0>3}0000_01D_MN.rnx.gz".format(year,doy)
+        source_file = source_raw + "/gps/data/daily/{:0>4}/{:0>3}/{:0>2}p".format(year,doy,yy)
+        download_bool = False
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+        
+        #Short name
+        file_name_gz = "brdm{:0>3}0.{:0>2}p.Z".format(doy,yy)
+        source_file = source_raw + "/gnss/mgex/daily/rinex3/{:0>4}/{:0>3}/{:0>2}p".format(year,doy,yy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("NAV for {} at {:0>4}-{:0>3} download with long name FAIL".format(cur_nav,year,doy))
+        
+        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            logging.error("ZTD for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_nav,year,doy))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
+
+# Download ZPD File with one site
+def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX"):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy))
+    LH.mkdir(save_dir)
+    yy = year-2000
+    file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
+    if (not os.path.exists(os.path.join(save_dir,file_name))):
+        y_temp,mon,date = doy2ymd((year),(doy))
+        weekd = ymd2gpsweekday(int(year),mon,date)
+        week = int(weekd/10)
+        # Different time different version of rinex
+        #RINEX3 first From Receiver data MO
+        file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
+        source_file = source_raw + "/obs/{:0>4}/{:0>3}".format(year,doy)
+        download_bool = False
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            download_bool = True
+        #RINEX3 first From Receiver data GO
+        file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs".format(cur_site,year,doy))
+            download_bool = True
+        #RINEX3 first From Receiver data Stream
+        file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Stream".format(cur_site,year,doy))
+            download_bool = True
+        #RINEX3 first From Receiver data GO from Stream
+        file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Stream".format(cur_site,year,doy))
+            download_bool = True
+        #RINEX3 first From Receiver data Unknown
+        file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Unknown".format(cur_site,year,doy))
+            download_bool = True
+        #RINEX3 first From Receiver data GO from Unknown
+        file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Unknown".format(cur_site,year,doy))
+            download_bool = True
+        #RINEX2
+        file_name_gz = "{}{:0>3}0.{:2d}D.Z".format(cur_site.upper(),doy,yy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("OBS for {} at {:0>4}-{:0>3} download with short name with rinex2".format(cur_site,year,doy))
+            download_bool = True
+        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
