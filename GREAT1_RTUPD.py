@@ -114,10 +114,12 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     ##--------Start the Programe#--------##
-    Run.run_app(software,"great_npp",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    # Run.run_app(software,"great_npp",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     if os.path.exists("upd_nl"):
         shutil.copyfile("upd_nl",os.path.join(work_dir,"UPD_BNC","upd_nl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
         shutil.copyfile("upd_wl",os.path.join(work_dir,"UPD_BNC","upd_wl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
+    os.remove("*_resfile")
+    os.remove("upd")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
