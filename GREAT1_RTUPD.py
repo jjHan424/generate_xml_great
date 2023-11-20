@@ -23,9 +23,8 @@ PURPOSE = "RTUPD"
 
 ##----------Python Log----------##
 ##----------SET 1----------##
-# work_dir = r"/cache/hanjunjie/Project/C-ZTD/ZTD_PPP"
-work_dir = r"/Users/hanjunjie/Master_3"
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
+work_dir = r"/cache/hanjunjie/Project/C-ZTD/UPD_BNC"
+software = r"/home/hanjunjie/great/great1.0_1203/build/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -65,7 +64,7 @@ for cur_site in site_temp:
         site_list.append(cur_site)
 
 #Find the short site name and long site name
-file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+file = open('/cache/hanjunjie/Software/Tools/generate_xml_great/sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
 site_list_csv = csv.DictReader(file)
 site_xyz = {}
 for cur_dic in site_list_csv:
@@ -115,7 +114,7 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     ##--------Start the Programe#--------##
-    # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    Run.run_app(software,"great_npp",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     if os.path.exists("upd_nl"):
         shutil.copyfile("upd_nl",os.path.join(work_dir,"UPD_BNC","upd_nl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
         shutil.copyfile("upd_wl",os.path.join(work_dir,"UPD_BNC","upd_wl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
