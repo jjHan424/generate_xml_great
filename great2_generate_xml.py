@@ -220,7 +220,7 @@ def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2
         count_day = count_day + 1
     tree.write(xmlfile)
 
-#Change XML inputs sp3clk
+#Change XML inputs system file
 def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     tree = et.parse(xmlfile)
     inputs_atx = tree.getroot().find("inputs").find("atx")
@@ -236,6 +236,25 @@ def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
         inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
         inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1"
         inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+    tree.write(xmlfile)
+
+#Change XML inputs system file for great1
+def change_inputs_sys_great1(xmlfile = "great2.1.xml",cur_sys = "GEC"):
+    tree = et.parse(xmlfile)
+    inputs_atx = tree.getroot().find("inputs").find("atx")
+    inputs_blq = tree.getroot().find("inputs").find("blq")
+    inputs_de = tree.getroot().find("inputs").find("DE")
+    inputs_eop = tree.getroot().find("inputs").find("poleut1")
+    inputs_lep = tree.getroot().find("inputs").find("leapsecond")
+    if cur_platform == "Darwin":
+        print("WAIT")
+    else:
+        inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
+        inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
+        inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
+        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1"
+        inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+    run_mkdir.mkdir("upd")
     tree.write(xmlfile)
 
 #Change XML outputs log
@@ -365,5 +384,29 @@ def reset_receiver_parameter(xmlfile = "great2.1.xml",site_list = [""]):
         cur_site_rec.attrib["sigZTD"] = "0.201"
         cur_site_rec.tail = "\n"
         outputs_parameters.append(cur_site_rec)
-    
+    tree.write(xmlfile)
+
+#Set XML receiver and parameter according to EPN csv
+def set_receiver_parameter(xmlfile = "great2.1.xml",site_list = [""],site_xyz = {}):
+    tree = et.parse(xmlfile)
+    outputs_receiver = tree.getroot().find("receiver")
+    outputs_parameters = tree.getroot().find("parameters")
+    for cur_site in site_list:
+        cur_site_rec = Element("rec")
+        cur_site_rec.attrib["id"] = cur_site
+        cur_site_rec.attrib["X"] = "{:>8.4f}".format(site_xyz[cur_site][0])
+        cur_site_rec.attrib["Y"] = "{:>8.4f}".format(site_xyz[cur_site][1])
+        cur_site_rec.attrib["Z"] = "{:>8.4f}".format(site_xyz[cur_site][2])
+        cur_site_rec.tail = "\n"
+        outputs_receiver.append(cur_site_rec)
+
+        cur_site_rec = Element("STA")
+        cur_site_rec.attrib["ID"] = cur_site
+        cur_site_rec.attrib["sigCLK"] = "9000"
+        cur_site_rec.attrib["sigPOS"] = "0.1_0.1_0.1"
+        cur_site_rec.attrib["sigSION"] = "9000"
+        cur_site_rec.attrib["sigTropPd"] = "0.015"
+        cur_site_rec.attrib["sigZTD"] = "0.201"
+        cur_site_rec.tail = "\n"
+        outputs_parameters.append(cur_site_rec)
     tree.write(xmlfile)

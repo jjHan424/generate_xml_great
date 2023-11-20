@@ -1,0 +1,118 @@
+<config>
+ <gen>
+   <beg> 2021-11-11 00:00:00 </beg>
+   <end> 2021-11-11 23:59:55 </end>
+   <sys> GPS GAL BDS </sys>
+   <rec>
+ TRO1  VARS  HETT  OVE6  ROM2  OST6 
+ OLK2  PYHA  LEK6  METG  LOV6  IRBE 
+ NOR7  SPT7  VAIN  HAS6  RANT  REDZ 
+ LAMA  HELG  GELL  LDB2  GOML  GOET 
+ BRTS  LEIJ  WARE  INVR  ARIS  TLL1 
+ SNEO  WTZZ  AUBG  BUTE  BACA  MIKL 
+ POLV  COMO  EGLT  SWAS  MARS  ZADA 
+ AJAC  SCOA  ACOR  ALME  MMET  ORID 
+ IZMI  NICO  SAVU  SUN6  MNSK  TER2 
+ SMLA  IJMU  DYNG  DEVA  MALL  MAH1 
+ LODZ  ZYWI  AUTN  ENTZ  VILL 
+   </rec>
+   <int> 30 </int>
+   <sat_rm> C01 C02 C03 C04 C05 C31 C56 C57 C58 C59 C60 C61 </sat_rm>
+   <est> LSQ </est> 
+ </gen>
+
+ <inputs>
+   <rinexo>
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/TRO13150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/VARS3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/HETT3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/OVE63150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ROM23150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/OST63150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/OLK23150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/PYHA3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/LEK63150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/METG3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/LOV63150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/IRBE3150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/NOR73150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/SPT73150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/VAIN3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/HAS63150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/RANT3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/REDZ3150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/LAMA3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/HELG3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/GELL3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/LDB23150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/GOML3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/GOET3150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/BRTS3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/LEIJ3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/WARE3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/INVR3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ARIS3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/TLL13150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/SNEO3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/WTZZ3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/AUBG3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/BUTE3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/BACA3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/MIKL3150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/POLV3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/COMO3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/EGLT3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/SWAS3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/MARS3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ZADA3150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/AJAC3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/SCOA3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ACOR3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ALME3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/MMET3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ORID3150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/IZMI3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/NICO3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/SAVU3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/SUN63150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/MNSK3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/TER23150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/SMLA3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/IJMU3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/DYNG3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/DEVA3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/MALL3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/MAH13150.21o
+  /cache/hanjunjie/Data/2021/OBS_EPN/315/LODZ3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ZYWI3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/AUTN3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/ENTZ3150.21o  /cache/hanjunjie/Data/2021/OBS_EPN/315/VILL3150.21o
+   </rinexo>
+   <rinexn>  /cache/hanjunjie/Data/2021/NAV/brdm3150.21n  </rinexn>
+   <rinexc>  /cache/hanjunjie/Data/2021/CLK/gfz21834.clk  </rinexc>
+   <sp3>  /cache/hanjunjie/Data/2021/SP3/gfz21834.sp3  </sp3>
+   
+   <atx> /cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx </atx>
+   <blq>/cache/hanjunjie/Project/A-Paper-1/model/oceanload </blq>
+   <DE> /cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great </DE>
+   <poleut1> /cache/hanjunjie/Project/B-IUGG/model/poleut1 </poleut1>
+   <leapsecond> /cache/hanjunjie/Project/A-Paper-1/model/leap_seconds </leapsecond>
+ </inputs>
+
+ <outputs append="false" verb="0">
+   <log> upd/LOGRT.log </log>
+   <flt> upd/$(rec)-GEC-F.flt  </flt>
+   <enu> upd/$(rec)-GEC-F.enu  </enu>
+   <upd> </upd>
+ </outputs>
+
+<process CompAug="YES" bds_code_bias_corr="true" crd_constr="EST" frequency="2" grad_mf="TILTING" gradient="false" ion_model="SION" isleo="false" lsq_mode="EPO" minimum_elev="7" npp_model="UPD" obs_combination="RAW_ALL" obs_weight="PARTELE" phase="true" realtime="false" slip_model="turboedit" tropo="true" tropo_mf="gmf" tropo_model="saastamoinen" turboedit_soft="./turboedit" ztd_model="PWC:120">
+<ifb_model> EST_REC_IFB </ifb_model>
+</process>
+
+<receiver>
+
+</receiver>
+
+
+ <parameters>
+
+</parameters>
+
+<turboedit lite_mode="true">
+ <ephemeris valid="true" /> 
+ <check_mw mw_limit="2.0" valid="true" />
+ <check_gf gf_limit="0.05" valid="true" />
+ <smooth_win value="25" />
+ <check_gap gap_limit="60" valid="true" />
+</turboedit>
+
+<ambiguity>
+   <fix_mode> NO </fix_mode>       
+   <part_fix>  YES  </part_fix>       
+   <apply_irc> NO </apply_irc> 
+   <part_fix_num> 3 </part_fix_num>
+   <ratio>  2.0  </ratio>            
+   <set_refsat> NO </set_refsat>
+   <add_leo>  NO   </add_leo>
+   <all_baselines>  NO  </all_baselines>
+   <min_common_time> 0 </min_common_time>                 
+   <baseline_length_limit>  3500  </baseline_length_limit>   
+   <widelane_interval> 30 </widelane_interval>               
+   <widelane_decision alpha="1000" maxdev="0.4" maxsig="0.10" />   
+   <narrowlane_decision alpha="1000" maxdev="0.3" maxsig="0.10" />   
+ </ambiguity>
+
+
+ <bds sigma_C="0.6" sigma_L="0.01">
+ <freq> 1 2</freq>
+ <band> 2 6</band>
+ </bds>
+
+ <gps sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2</freq>
+  <band> 1 2 </band>
+ </gps>
+ 
+ <gal sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 5 </band>
+ </gal>
+ 
+ <glo sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 2 </band>
+ </glo>
+ 
+ <qzs sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 2 </band>
+ </qzs>
+</config>
