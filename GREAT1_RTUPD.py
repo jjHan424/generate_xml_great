@@ -118,8 +118,15 @@ while count_int > 0:
     if os.path.exists("upd_nl"):
         shutil.copyfile("upd_nl",os.path.join(work_dir,"UPD_BNC","upd_nl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
         shutil.copyfile("upd_wl",os.path.join(work_dir,"UPD_BNC","upd_wl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
-    os.remove("*_resfile")
-    os.remove("upd")
+    for cur_site in site_list:
+        if os.path.exists("{}_resfile".format(cur_site)):
+            os.remove("{}_resfile".format(cur_site))
+    if os.path.exists("clkfiletemp_{:0>4}{:0>3}".format(year_int,doy_int)):
+        os.remove("clkfiletemp_{:0>4}{:0>3}".format(year_int,doy_int))
+    if os.path.exists("WL-res"):
+        os.remove("WL-res")
+    if os.path.exists("upd"):
+        shutil.rmtree("upd")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
