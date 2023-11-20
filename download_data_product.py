@@ -64,8 +64,10 @@ def gzip(local,file_name_gz,file_name):
 def crx2rnx(local,file_name_d,file_name):
     os.chdir(local)
     cmd = "{} {}".format(CRX2RNX,file_name_d)
+    cmd_antenna = "sed -i 's/.*ANTENNA: DELTA H\/E\/N/        0.0000        0.0000        0.0000                  ANTENNA: DELTA H\/E\/N/1' {}".format(file_name)
     try:
         result = subprocess.getstatusoutput(cmd)
+        result = subprocess.getstatusoutput(cmd_antenna)
         if (os.path.exists(file_name_d)):
             os.remove(file_name_d)
     except OSError:
@@ -144,7 +146,7 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
         source_file = source_raw + "/obs/{:0>4}/{:0>3}".format(year,doy)
         download_bool = False
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name)
+            gzip(save_dir,file_name_gz,file_name_d)
             download_bool = True
         #RINEX3 first From Receiver data GO
         file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
