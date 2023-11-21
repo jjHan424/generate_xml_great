@@ -14,16 +14,18 @@ fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
     XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great1-RTUPD.xml"
+    work_dir = r"/Users/hanjunjie/Master_3/2-ZTD/UPD_BNC"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great1-RTUPD.xml"
+    work_dir = r"/cache/hanjunjie/Project/C-ZTD/UPD_BNC"
 import great2_generate_xml as gen_xml
 import Linux_Win_HJJ as Run
 PURPOSE = "RTUPD"
 
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/cache/hanjunjie/Project/C-ZTD/UPD_BNC"
+Run.mkdir(os.path.join(work_dir,"UPD_BNC"))
 software = r"/home/hanjunjie/great/great1.0_1203/build/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
@@ -64,7 +66,10 @@ for cur_site in site_temp:
         site_list.append(cur_site)
 
 #Find the short site name and long site name
-file = open('/cache/hanjunjie/Software/Tools/generate_xml_great/sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+if (cur_platform == "Darwin"):
+    file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+else:
+    file = open('/cache/hanjunjie/Software/Tools/generate_xml_great/sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
 site_list_csv = csv.DictReader(file)
 site_xyz = {}
 for cur_dic in site_list_csv:
@@ -77,11 +82,18 @@ for cur_site_short in site_list:
         site_xyz[cur_site_short] = [0,0,0]
 
 # SET PATH
-upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
-obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
-nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
-sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
-clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
+if (cur_platform == "Darwin"):
+    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+    obs_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
+else:
+    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+    obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
+    nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
+    clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")

@@ -168,7 +168,7 @@ def change_inputs_nav(xmlfile = "great2.1.xml",office = "brdm",nav_dir = "defaul
     yy = year - 2000
     while (count_day < day_length):
         day = doy + count_day
-        inputs_nav.text = inputs_nav.text + "     " + os.path.join(nav_dir,"{}{:0>3}.{:0>2}n".format(office,day,yy)) + "\n"
+        inputs_nav.text = inputs_nav.text + "     " + os.path.join(nav_dir,"{}{:0>3}0.{:0>2}n".format(office,day,yy)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -247,7 +247,11 @@ def change_inputs_sys_great1(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     inputs_eop = tree.getroot().find("inputs").find("poleut1")
     inputs_lep = tree.getroot().find("inputs").find("leapsecond")
     if cur_platform == "Darwin":
-        print("WAIT")
+        inputs_atx.text="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/igs_absolute_14.atx"
+        inputs_blq.text="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/oceanload"
+        inputs_de.text ="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/jpleph_de405_great"
+        inputs_eop.text="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/poleut1"
+        inputs_lep.text="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/leap_seconds"
     else:
         inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
         inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
