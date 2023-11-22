@@ -234,7 +234,7 @@ def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
         inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
         inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
         inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
-        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1"
+        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_2023"
         inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
     tree.write(xmlfile)
 
@@ -256,7 +256,7 @@ def change_inputs_sys_great1(xmlfile = "great2.1.xml",cur_sys = "GEC"):
         inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
         inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
         inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
-        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1"
+        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_2023"
         inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
     run_mkdir.mkdir("upd")
     tree.write(xmlfile)
