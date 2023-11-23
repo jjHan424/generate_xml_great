@@ -11,6 +11,7 @@ import xml.etree.ElementTree as et
 import logging
 import platform
 from datetime import datetime
+import csv
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
@@ -35,6 +36,18 @@ data_centre = sys.argv[5]
 
 if "ZTD" in download_mode or "OBS" in download_mode:
     site_list = sys.argv[6].split("_")
+    #Find the short site name and long site name
+    file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+    site_list_csv = csv.DictReader(file)
+    site_dict_short_long = {}
+    for cur_dic in site_list_csv:
+        for cur_site_short in site_list:
+            if cur_site_short in cur_dic["Name"]:
+                site_dict_short_long[cur_site_short] = cur_dic["Name"]
+    for cur_site_short in site_list:
+        if cur_site_short not in site_dict_short_long.keys():
+            logging.error("There is no long name for {}!!!".format(cur_site_short))
+            site_dict_short_long[cur_site_short] = "{}00XXX".format(cur_site_short.upper())
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 
@@ -45,7 +58,7 @@ while count_int > 0:
         logging.info("BEGIN ZTD Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         for cur_site in site_list:
             logging.info("START ZTD Site = {}, Year ={:0>4} , Doy = {:0>3}".format(cur_site,year_int,doy_int))
-            dl.download_zpd_file(data_save,CDDIS,year_int,doy_int,cur_site)
+            dl.download_zpd_file(data_save,CDDIS,year_int,doy_int,cur_site,site_dict_short_long[cur_site])
     logging.info("START NAV Year ={:0>4} , Doy = {:0>3}".format(year_int,doy_int))
 
     #NAV

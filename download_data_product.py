@@ -75,7 +75,7 @@ def crx2rnx(local,file_name_d,file_name):
         sys.exit()
 
 # Download ZPD File with one site
-def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX"):
+def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXXXXXXX"):
     save_dir = os.path.join(data_save,"{:0>4}".format(year),"ZTD","{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
@@ -89,12 +89,12 @@ def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_s
             file_name_gz = "{}{:0>3}0.{:0>2}zpd.gz".format(cur_site.lower(),doy,yy)
             source_file = source_raw + "/gnss/products/troposphere/zpd/{:0>4}/{:0>3}".format(year,doy)
         else:
-            source_file = source_raw + "/gnss/products/troposphere/zpd/{:0>4}/IGS0OPSFIN_YYYYDDDHHMM_01D)05M_SITENAME_TRO.TRO.gz".format(year,doy,cur_site.lower(),doy,yy)
-        
+            file_name_gz = "IGS0OPSFIN_{:0>4}{:0>3}0000_01D_05M_{}_TRO.TRO.gz".format(year,doy,cur_site_long)
+            source_file = source_raw + "/gnss/products/troposphere/zpd/{:0>4}/{:0>3}".format(year,doy)
+    
         if (download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name)
-        else:
-            logging.error("ZTD for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
+
         if (not os.path.exists(os.path.join(save_dir,file_name))):
             logging.error("ZTD for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
         else:
@@ -120,8 +120,9 @@ def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
             gzip(save_dir,file_name_gz,file_name)
         
         #Short name
-        file_name_gz = "brdm{:0>3}0.{:0>2}p.Z".format(doy,yy)
-        source_file = source_raw + "/gnss/mgex/daily/rinex3/{:0>4}/{:0>3}/{:0>2}p".format(year,doy,yy)
+        if (not download_bool):
+            file_name_gz = "brdm{:0>3}0.{:0>2}p.Z".format(doy,yy)
+            source_file = source_raw + "/gnss/mgex/daily/rinex3/{:0>4}/{:0>3}/{:0>2}p".format(year,doy,yy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name)
             logging.warning("NAV for {} at {:0>4}-{:0>3} download with long name FAIL".format(cur_nav,year,doy))
@@ -153,37 +154,43 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
             gzip(save_dir,file_name_gz,file_name_d)
             download_bool = True
         #RINEX3 first From Receiver data GO
-        file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool):
+            file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs".format(cur_site,year,doy))
             download_bool = True
         #RINEX3 first From Receiver data Stream
-        file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool):
+            file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Stream".format(cur_site,year,doy))
             download_bool = True
         #RINEX3 first From Receiver data GO from Stream
-        file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool):
+            file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Stream".format(cur_site,year,doy))
             download_bool = True
         #RINEX3 first From Receiver data Unknown
-        file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool):
+            file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Unknown".format(cur_site,year,doy))
             download_bool = True
         #RINEX3 first From Receiver data GO from Unknown
-        file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
+        if (not download_bool):
+            file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Unknown".format(cur_site,year,doy))
             download_bool = True
         #RINEX2
-        file_name_gz = "{}{:0>3}0.{:2d}D.Z".format(cur_site.upper(),doy,yy)
+        if (not download_bool):
+            file_name_gz = "{}{:0>3}0.{:2d}D.Z".format(cur_site.upper(),doy,yy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with short name with rinex2".format(cur_site,year,doy))
@@ -222,7 +229,8 @@ def download_sp3_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
             gzip(save_dir,file_name_gz,file_name)
             download_bool = True
         #Download from mgex
-        source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
+        if (not download_bool):
+            source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name)
             download_bool = True
@@ -259,7 +267,8 @@ def download_clk_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
             gzip(save_dir,file_name_gz,file_name)
             download_bool = True
         #Download from mgex
-        source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
+        if (not download_bool):
+            source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name)
             download_bool = True
