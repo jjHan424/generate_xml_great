@@ -15,7 +15,7 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    data_save = "/Users/hanjunjie/Master_3"
+    data_save = "/Users/hanjunjie/Master_3/Data"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     data_save = "/cache/hanjunjie/Data"
@@ -56,7 +56,19 @@ while count_int > 0:
         else:
             logging.error("{} is not support".format(data_centre))
     #SP3
+    if "SP3" in download_mode:
+        logging.info("BEGIN SP3 Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
+        if "WHU" in data_centre:
+            dl.download_sp3_file_WHU(data_save,WHU,year_int,doy_int,"COD")
+        else:
+            logging.error("{} is not support".format(data_centre))
     #CLK
+    if "CLK" in download_mode:
+        logging.info("BEGIN SP3 Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
+        if "WHU" in data_centre:
+            dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,"COD")
+        else:
+            logging.error("{} is not support".format(data_centre))
     doy_int = doy_int + 1
     count_int = count_int - 1
 
