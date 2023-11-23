@@ -245,7 +245,7 @@ def download_clk_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
     file_name = "{}{:0>5}.clk".format(cur_analysis.lower(),weekd)
     if (not os.path.exists(os.path.join(save_dir,file_name))):
         if week >= 1962:
-            file_name_gz = "{}0MGX{}_{:0>4}{:0>3}0000_01D_05M_ORB.SP3.gz".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+            file_name_gz = "{}0MGX{}_{:0>4}{:0>3}0000_01D_30S_CLK.CLK.gz".format(cur_analysis.upper(),cur_type.upper(),year,doy)
             source_file = source_raw + "/gps/products/{:0>4}".format(week)
         else:
             if cur_analysis.lower() == "cod":
