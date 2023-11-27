@@ -35,12 +35,12 @@ def change_gen_time(xml_file,year,doy,hour,s_length):
     hour_length = int(s_length / 3600)
     sec_length = s_length - hour_length * 3600
     while (hour_length >= 24):
-        day = day + 1
+        doy = doy + 1
         hour_length = hour_length - 24
     hour = hour + hour_length
     while (hour >= 24):
         hour = hour - 24
-        day = day + 1
+        doy = doy + 1
     while (sec_length >= 3600):
         hour = hour + 1
         sec_length = sec_length - 3600
@@ -48,6 +48,7 @@ def change_gen_time(xml_file,year,doy,hour,s_length):
         min = min + 1
         sec_length = sec_length - 60
     sec = sec + sec_length
+    yyyy,mon,day = doy2ymd(year,doy)
     end.text = " {0:04}".format(int(yyyy)) + "-" + "{0:02}".format(int(mon)) + "-" + "{0:02}".format(int(day)) + " " + "{0:02}".format(int(hour)) + ":{0:02}".format(min) + ":{0:02} ".format(sec)
     tree.write(xml_file)
 
