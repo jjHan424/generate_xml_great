@@ -12,11 +12,14 @@ import logging
 import platform
 from datetime import datetime
 import csv
+import threading
+import Linux_Win_HJJ as LH
+thread_num = 4
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    data_save = "/Users/hanjunjie/Master_3"
+    data_save = "/Users/hanjunjie/Master_3/Data"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     data_save = "/cache/hanjunjie/Data"
@@ -34,18 +37,21 @@ doy = sys.argv[2]
 count = sys.argv[3]
 data_centre = sys.argv[4].upper()
 site_list = sys.argv[5].split("_")
-site_list = "TRO1  VARS  HETT  OVE6  ROM2  OST6\
- OLK2  PYHA  LEK6  METG  LOV6  IRBE\
- NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
- LAMA  HELG  GELL  LDB2  GOML  GOET\
- BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
- SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
- POLV  COMO  EGLT  SWAS  MARS  ZADA\
- AJAC  SCOA  ACOR  ALME  MMET  ORID\
- IZMI  NICO  SAVU  SUN6  MNSK  TER2\
- SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
- LODZ  ZYWI  AUTN  ENTZ  VILL"
-site_list = site_list.split()
+#UPD_EPN
+# site_list = "TRO1  VARS  HETT  OVE6  ROM2  OST6\
+#   OLK2  PYHA  LEK6  METG  LOV6  IRBE\
+#   NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
+#   LAMA  HELG  GELL  LDB2  GOML  GOET\
+#   BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
+#   SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
+#   POLV  COMO  EGLT  SWAS  MARS  ZADA\
+#   AJAC  SCOA  ACOR  ALME  MMET  ORID\
+#   IZMI  NICO  SAVU  SUN6  MNSK  TER2\
+#   SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
+#   LODZ  ZYWI  AUTN  ENTZ  VILL"
+#AUG_GER
+site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+# site_list = site_list.split()
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 
 #Find the short site name and long site name
@@ -62,13 +68,26 @@ for cur_site_short in site_list:
         site_dict_short_long[cur_site_short] = "{}00XXX".format(cur_site_short.upper())
 
 
+thread_process = []
 while count_int > 0:
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_TEMP","{:0>3}".format(doy_int))
+    LH.mkdir(save_dir)
     for cur_site_short in site_list:
         logging.info("START Obs Site = {}-{}, Year ={:0>4} , Doy = {:0>3}".format(cur_site_short,site_dict_short_long[cur_site_short],year_int,doy_int))
         if data_centre == "EPN":
-            dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
+            thread_process.append(threading.Thread(target=dl.download_obs_file_EPN,args=(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short]),daemon=False))
+            # dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
         else:
             logging.error("{} is not support".format(data_centre))
+    process_num = 0
+    thread_start = []
+    for cur_thread in thread_process:
+        cur_thread.start()
+        thread_start.append(cur_thread)
+        if len(thread_start) == thread_num:
+            for cur_start_thread in thread_start:
+                cur_start_thread.join()
+            thread_start = []
     doy_int = doy_int + 1
     count_int = count_int - 1
 

@@ -8,20 +8,24 @@ import xml.etree.ElementTree as et
 import logging
 import platform
 from datetime import datetime
+import csv
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-Aug2Grid.xml"
+    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-Aug2Grid-NOCRD.xml"
+    work_dir = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-Aug2Grid.xml"
+    work_dir = r"/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 import great2_generate_xml as gen_xml
 import Linux_Win_HJJ as Run
 PURPOSE = "AUG2GRID"
+if not os.path.exists(work_dir):
+    Run.mkdir(work_dir)
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
@@ -84,6 +88,21 @@ elif area == "EPN2":
 else:
     sys.exit()
 
+if (cur_platform == "Darwin"):
+    file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+else:
+    file = open('/cache/hanjunjie/Software/Tools/generate_xml_great/sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+site_list_csv = csv.DictReader(file)
+site_xyz = {}
+for cur_dic in site_list_csv:
+    for cur_site_short in site_list:
+        if cur_site_short in cur_dic["Name"]:
+            site_xyz[cur_site_short] = [float(cur_dic["X"]),float(cur_dic["Y"]),float(cur_dic["Z"])]
+for cur_site_short in site_list:
+    if cur_site_short not in site_xyz.keys():
+        logging.error("There is no long name for {}!!!".format(cur_site_short))
+        site_xyz[cur_site_short] = [0,0,0]
+
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
 while count_int > 0:
@@ -109,12 +128,14 @@ while count_int > 0:
     gen_xml.change_outputs_aug2grid(cur_xml_name,area,rm_site_list,ck_site_list,cur_sys,int(sampling))
     #Change outputs log
     gen_xml.change_outputs_log(cur_xml_name,PURPOSE)
+    #Change receiver
+    gen_xml.set_receiver_parameter(cur_xml_name,site_list,site_xyz)
     if area == "EPN2":
         gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","bias_baseline","500")
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     #--------Start the Programe--------#
-    Run.run_app(software,"GREAT_Aug2Grid",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    # Run.run_app(software,"GREAT_Aug2Grid",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 

@@ -46,17 +46,18 @@ sampling = sys.argv[6] # "30" or "5"
 count = sys.argv[7]
 #PPP
 site = sys.argv[8]
-site_list_str = "TRO1  VARS  HETT  OVE6  ROM2  OST6\
- OLK2  PYHA  LEK6  METG  LOV6  IRBE\
- NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
- LAMA  HELG  GELL  LDB2  GOML  GOET\
- BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
- SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
- POLV  COMO  EGLT  SWAS  MARS  ZADA\
- AJAC  SCOA  ACOR  ALME  MMET  ORID\
- IZMI  NICO  SAVU  SUN6  MNSK  TER2\
- SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
- LODZ  ZYWI  AUTN  ENTZ  VILL"
+site_list_str = "TRO1  VARS"
+# HETT  OVE6  ROM2  OST6\
+#  OLK2  PYHA  LEK6  METG  LOV6  IRBE\
+#  NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
+#  LAMA  HELG  GELL  LDB2  GOML  GOET\
+#  BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
+#  SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
+#  POLV  COMO  EGLT  SWAS  MARS  ZADA\
+#  AJAC  SCOA  ACOR  ALME  MMET  ORID\
+#  IZMI  NICO  SAVU  SUN6  MNSK  TER2\
+#  SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
+#  LODZ  ZYWI  AUTN  ENTZ  VILL"
 #site list generate
 site_list = []
 # site_temp = site.split("_")
@@ -118,7 +119,7 @@ while count_int > 0:
     # Change input nav
     gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
     # Change input sp3clk
-    gen_xml.change_inputs_sp3clk(cur_xml_name,"BNC",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
+    gen_xml.change_inputs_sp3clk(cur_xml_name,"cod",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
     # Change system file
     gen_xml.change_inputs_sys_great1(cur_xml_name,cur_sys) # Not Complete
     #Change receiver
@@ -137,8 +138,8 @@ while count_int > 0:
         os.remove("clkfiletemp_{:0>4}{:0>3}".format(year_int,doy_int))
     if os.path.exists("WL-res"):
         os.remove("WL-res")
-    if os.path.exists("upd"):
-        shutil.rmtree("upd")
+    # if os.path.exists("upd"):
+    #     shutil.rmtree("upd")
     doy_int = doy_int + 1
     count_int = count_int - 1
 

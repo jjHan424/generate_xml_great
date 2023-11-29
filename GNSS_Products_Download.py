@@ -72,14 +72,14 @@ while count_int > 0:
     if "SP3" in download_mode:
         logging.info("BEGIN SP3 Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
-            dl.download_sp3_file_WHU(data_save,WHU,year_int,doy_int,"COD")
+            dl.download_sp3_file_WHU(data_save,WHU,year_int,doy_int,"COD","FIN")
         else:
             logging.error("{} is not support".format(data_centre))
     #CLK
     if "CLK" in download_mode:
-        logging.info("BEGIN SP3 Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
+        logging.info("BEGIN CLK Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
-            dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,"COD")
+            dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,"COD","FIN")
         else:
             logging.error("{} is not support".format(data_centre))
     doy_int = doy_int + 1
