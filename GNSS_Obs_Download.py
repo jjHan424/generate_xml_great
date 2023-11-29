@@ -79,16 +79,16 @@ while count_int > 0:
             # dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
         else:
             logging.error("{} is not support".format(data_centre))
-    process_num = 0
-    thread_start = []
-    for cur_thread in thread_process:
-        cur_thread.start()
-        thread_start.append(cur_thread)
-        if len(thread_start) == thread_num:
-            for cur_start_thread in thread_start:
-                cur_start_thread.join()
-            thread_start = []
+    
     doy_int = doy_int + 1
     count_int = count_int - 1
+thread_start = []
+for cur_thread in thread_process:
+    cur_thread.start()
+    thread_start.append(cur_thread)
+    if len(thread_start) == thread_num:
+        for cur_start_thread in thread_start:
+            cur_start_thread.join()
+        thread_start = []
 
 
