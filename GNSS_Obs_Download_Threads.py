@@ -75,10 +75,20 @@ while count_int > 0:
     for cur_site_short in site_list:
         logging.info("START Obs Site = {}-{}, Year ={:0>4} , Doy = {:0>3}".format(cur_site_short,site_dict_short_long[cur_site_short],year_int,doy_int))
         if data_centre == "EPN":
-            dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
+            thread_process.append(threading.Thread(target=dl.download_obs_file_EPN,args=(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short]),daemon=False))
+            # dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
         else:
             logging.error("{} is not support".format(data_centre))
+    
     doy_int = doy_int + 1
     count_int = count_int - 1
+thread_start = []
+for cur_thread in thread_process:
+    cur_thread.start()
+    thread_start.append(cur_thread)
+    if len(thread_start) == thread_num:
+        for cur_start_thread in thread_start:
+            cur_start_thread.join()
+        thread_start = []
 
 
