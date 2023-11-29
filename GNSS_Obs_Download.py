@@ -14,7 +14,7 @@ from datetime import datetime
 import csv
 import threading
 import Linux_Win_HJJ as LH
-thread_num = 4
+thread_num = 8
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
