@@ -48,9 +48,12 @@ reset_par = sys.argv[10]
 #site list generate
 site_list = []
 site_temp = site.split("_")
-for cur_site in site_temp:
-    if cur_site != "NONE":
-        site_list.append(cur_site)
+if "EPN_GER" in site_list:
+    site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+else:
+    for cur_site in site_temp:
+        if cur_site != "NONE":
+            site_list.append(cur_site)
 if amb == "YES":
     amb = "FIXED"
 else:
@@ -104,7 +107,7 @@ while count_int > 0:
     gen_xml.reset_receiver_parameter(cur_xml_name,site_list)
     #Change for ZTD out
     gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
-    gen_xml.change_node_subnode_string(cur_xml_name,"npp","ipp_out","FALSE")
+    gen_xml.change_node_subnode_string(cur_xml_name,"npp","ipp_out","TRUE")
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     ##--------Start the Programe#--------##
