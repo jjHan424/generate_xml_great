@@ -26,7 +26,7 @@ if not os.path.exists(work_dir):
     Run.mkdir(work_dir)
 ##----------Python Log----------##
 ##----------SET 1----------##
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
+software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231125/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
