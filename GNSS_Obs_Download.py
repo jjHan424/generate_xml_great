@@ -50,7 +50,9 @@ site_list = sys.argv[5].split("_")
 #   SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
 #   LODZ  ZYWI  AUTN  ENTZ  VILL"
 #AUG_GER
-site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+# site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+#AUG_EPN1
+site_list = ["ONSA","ONS1","SPT7","SPT0","VAE6","NOR7","JON6","OSK6","SULD"]
 # site_list = site_list.split()
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 
@@ -70,7 +72,7 @@ for cur_site_short in site_list:
 
 thread_process = []
 while count_int > 0:
-    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_TEMP","{:0>3}".format(doy_int))
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy_int))
     LH.mkdir(save_dir)
     for cur_site_short in site_list:
         logging.info("START Obs Site = {}-{}, Year ={:0>4} , Doy = {:0>3}".format(cur_site_short,site_dict_short_long[cur_site_short],year_int,doy_int))
