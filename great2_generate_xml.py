@@ -230,7 +230,11 @@ def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     inputs_eop = tree.getroot().find("inputs").find("eop")
     inputs_lep = tree.getroot().find("inputs").find("leapsecond")
     if cur_platform == "Darwin":
-        print("WAIT")
+        inputs_atx.text="/Users/hanjunjie/Master_3/Data/model/igs_absolute_14.atx"
+        inputs_blq.text="/Users/hanjunjie/Master_3/Data/model/oceanload"
+        inputs_de.text ="/Users/hanjunjie/Master_3/Data/model/jpleph_de405_great"
+        inputs_eop.text="/Users/hanjunjie/Master_3/Data/model/poleut1_2023"
+        inputs_lep.text="/Users/hanjunjie/Master_3/Data/model/leap_seconds"
     else:
         inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
         inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"

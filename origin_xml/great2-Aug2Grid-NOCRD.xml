@@ -1,0 +1,160 @@
+<config>
+ <gen>
+   <beg> 2021-11-06 00:00:00 </beg>
+   <end> 2021-11-06 23:59:55 </end>
+   <sys> GPS GAL BDS </sys>
+    <rec> PASA  SCOA  TLMF  TLSG  TLSE  ESCO  LLIV  BELL  EBRE  CREU  CASE </rec>
+   <int> 30 </int>
+   <sat_rm> C01 C02 C03 C04 C05 </sat_rm>
+   <est> LSQ </est> 
+ </gen>
+
+ <inputs>
+   <aug>
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/PASA-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/SCOA-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/TLMF-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/TLSG-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/TLSE-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/ESCO-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/LLIV-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/BELL-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/EBRE-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/CREU-GEC.aug
+     /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/CASE-GEC.aug
+</aug>
+ </inputs>
+
+ <outputs append="false" verb="2">
+   <log name="AUG2GRID" type="BASIC" />
+   <ppp> server/$(rec)-GEC-AR.ppp  </ppp>
+   <flt> server/$(rec)-GEC-AR.flt  </flt>
+   <enu> server/$(rec)-GEC-AR.enu  </enu>
+   <aug>EPN2-R-TLMF-TLSG-TLSE-C-CROSS/$(rec)-GEC3-30.aug</aug>
+ </outputs>
+
+<process>
+	<frequency> 2 </frequency>
+	<realtime> FALSE </realtime>
+	<simulation> FALSE </simulation>
+	
+	<crd_constr> EST </crd_constr>
+	<phase> TRUE </phase>
+	<doppler> FALSE </doppler>
+	<tropo> TRUE </tropo>
+	<iono> TRUE </iono>
+	<gradient> FALSE </gradient>
+	<tropo_model> saastamoinen </tropo_model>
+	<tropo_mf> gmf </tropo_mf>
+	
+	
+	
+	
+	
+	
+	
+	
+	<minimum_elev> 7 </minimum_elev> 
+	<obs_combination> RAW_ALL </obs_combination>
+	
+	
+	<ion_model> SION </ion_model>
+	<obs_weight> PARTELE </obs_weight>
+	<auto_band> FALSE </auto_band> 
+	<sd_sat> FALSE </sd_sat>
+	
+	<slip_model> turboedit </slip_model>
+	<bds_code_bias_corr> true </bds_code_bias_corr>
+	<npp_model> PPP_RTK </npp_model> 
+	<CompAug> NO </CompAug>	
+	<ifb_model> EST_REC_IFB </ifb_model>
+</process>
+<npp>
+		<comp_aug> NO </comp_aug>
+		<grid_aug> NO </grid_aug>
+</npp>
+<ionogrid ID="01">
+     
+		<Mask>EPN2</Mask>
+		<RefLon> -2.00 </RefLon>
+		<RefLat> 44.10 </RefLat>
+		<SpaceLon> 1.50 </SpaceLon>
+		<SpaceLat> 1.50 </SpaceLat>
+		<CountLon>  5 </CountLon>
+		<CountLat>  4 </CountLat>
+		<rec_rm> TLMF  TLSG  TLSE </rec_rm>
+		<min_site> 3 </min_site>
+    
+		<bias_sigma> 0 </bias_sigma>		
+		<bias_wgt> SIGMA </bias_wgt>
+        <bias_res> 1000000000 </bias_res>
+		<bias_baseline> 300 </bias_baseline>
+    
+		<wgt_mode>ChkCross</wgt_mode>
+		<rec_chk> CROSS </rec_chk>
+		<roti_wgt> false </roti_wgt>
+		<maxdis_wgt> 300 </maxdis_wgt>
+		
+</ionogrid>
+<receiver>
+
+</receiver>
+
+
+ <parameters>
+
+</parameters>
+
+<turboedit lite_mode="true">
+ <ephemeris valid="true" /> 
+ <check_mw mw_limit="2.0" valid="true" />
+ <check_gf gf_limit="0.05" valid="true" />
+ <smooth_win value="25" />
+ <check_gap gap_limit="60" valid="true" />
+</turboedit>
+
+
+<ambiguity>
+                      
+          
+   <fix_mode> SEARCH </fix_mode>       
+   <part_fix>  YES  </part_fix>       
+   <apply_irc> NO </apply_irc> 
+   <part_fix_num> 3 </part_fix_num>
+   <ratio>  2.0  </ratio>            
+   <set_refsat> YES </set_refsat>
+   <add_leo>  NO   </add_leo>
+   <all_baselines>  NO  </all_baselines>
+   <min_common_time> 0 </min_common_time>                 
+   <baseline_length_limit>  3500  </baseline_length_limit>   
+   <widelane_interval> 30 </widelane_interval>               
+   <widelane_decision alpha="1000" maxdev="0.4" maxsig="0.10" />   
+   <narrowlane_decision alpha="1000" maxdev="0.25" maxsig="0.10" />   
+ </ambiguity>
+
+
+ <bds sigma_C="0.6" sigma_L="0.01">
+ <freq> 1 2</freq>
+ <band> 2 6 </band>
+ </bds>
+
+ <gps sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2</freq>
+  <band> 1 2</band>
+ </gps>
+ 
+ <gal sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2</freq>
+  <band> 1 5</band>
+ </gal>
+ 
+ <glo sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 2 </band>
+ </glo>
+ 
+ <qzs sigma_C="0.6" sigma_L="0.01">
+  <freq> 1 2 </freq>
+  <band> 1 2 </band>
+ </qzs>
+</config>
