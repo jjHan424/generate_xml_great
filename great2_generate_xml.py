@@ -217,7 +217,7 @@ def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2
     yy = year - 2000
     while (count_day < day_length):
         day = doy + count_day
-        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{}{}".format(year,day),"{}-R-{}-C-CROSS".format(area,cur_site),"GREAT-GEC3-30.grid") + "\n"
+        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{:0>4}{:0>3}".format(year,day),"{}-R-{}-C-CROSS".format(area,cur_site),"GREAT-GEC3-30.grid") + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
