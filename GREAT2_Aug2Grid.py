@@ -64,11 +64,11 @@ if grid_mode.upper() == "CHKCROSS":
 
 
 # SET AREA
-if area == "EPN_GER":
+if area == "EPNGER":
     aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
     site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
-    Mask = "EPN_GER"
-    RefLon,RefLat = 3.4,53.36
+    Mask = "EPNGER"
+    RefLon,RefLat = 3.19,53.44
     SpaceLon,SpaceLat = 1.5,1.5
     CountLon,CountLat = 6,4
 elif area == "EPN1":
@@ -85,6 +85,34 @@ elif area == "EPN2":
     RefLon,RefLat = -2.0,44.1
     SpaceLon,SpaceLat = 1.5,1.5
     CountLon,CountLat = 5,4
+elif area == "EPNGER12":
+    aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
+    site_list = ["IJMU","KOS1","DELF","VLIS","TIT2","DENT","BRUX","WARE","EIJS","EUSK","DOUR","REDU"]
+    Mask = "EPNGER12"
+    RefLon,RefLat = 3.08,52.73
+    SpaceLon,SpaceLat = 1.0,1.0
+    CountLon,CountLat = 5,4
+elif area == "EPNGER7":
+    aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
+    site_list = ["TIT2","BRUX","WARE","EIJS","EUSK","DOUR","REDU"]
+    Mask = "EPNGER7"
+    RefLon,RefLat = 4.0610,51.1184
+    SpaceLon,SpaceLat = 0.6,0.6
+    CountLon,CountLat = 6,3
+elif area == "CHNWH9":
+    aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
+    site_list = ["N028","N047","N068","WHDS","WHSP","WHXZ","WHYJ","WUDA","XGXN"]
+    Mask = "CHNWH9"
+    RefLon,RefLat = 113.41,31.59
+    SpaceLon,SpaceLat = 0.5,0.5
+    CountLon,CountLat = 5,4
+elif area == "CHNHK16":
+    aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
+    site_list = ["HKCL","HKKS","HKKT","HKLM","HKLT","HKMW","HKNP","HKOH","HKPC","HKSC","HKSL","HKSS","HKST","HKTK","HKWS","T430"]
+    Mask = "CHNHK16"
+    RefLon,RefLat = 113.86,22.58
+    SpaceLon,SpaceLat = 0.1,0.1
+    CountLon,CountLat = 6,5
 else:
     sys.exit()
 

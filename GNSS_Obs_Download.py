@@ -52,7 +52,7 @@ site_list = sys.argv[5].split("_")
 #AUG_GER
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 #AUG_EPN1
-site_list = ["ONSA","ONS1","SPT7","SPT0","VAE6","NOR7","JON6","OSK6","SULD"]
+site_list = ["PTBB","REDU","KOS1","WSRT","BRUX","TIT2"]
 # site_list = site_list.split()
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 

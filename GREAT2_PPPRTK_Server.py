@@ -11,9 +11,11 @@ from datetime import datetime
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
+    work_dir = r"/Users/hanjunjie/Master_3/2-ZTD/AUG"
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
     XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 else:
+    work_dir = r"/cache/hanjunjie/Project/C-ZTD/ZTD_PPP"
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 import great2_generate_xml as gen_xml
@@ -22,7 +24,7 @@ PURPOSE = "PPPRTKServer"
 
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/cache/hanjunjie/Project/C-ZTD/ZTD_PPP"
+
 software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
@@ -58,13 +60,19 @@ if amb == "YES":
     amb = "FIXED"
 else:
     amb = "FLOAT"
-
 # SET PATH
-upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
-obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
-nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
-sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
-clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
+if (cur_platform == "Darwin"):
+    upd_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/UPD".format(year)
+    obs_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
+else:
+    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+    obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
+    nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
+    clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
