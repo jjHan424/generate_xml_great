@@ -101,9 +101,9 @@ elif area == "EPNGER7":
     CountLon,CountLat = 6,3
 elif area == "CHNWH9":
     aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
-    site_list = ["N028","N047","N068","WHDS","WHSP","WHXZ","WHYJ","WUDA","XGXN"]
+    site_list = ["N028","N047","N068","WHDS","WHSP","WHXZ","XGXN","WHYJ","WUDA"]
     Mask = "CHNWH9"
-    RefLon,RefLat = 113.41,31.59
+    RefLon,RefLat = 112.91,31.59
     SpaceLon,SpaceLat = 0.5,0.5
     CountLon,CountLat = 5,4
 elif area == "CHNHK16":

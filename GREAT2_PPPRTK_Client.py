@@ -13,16 +13,19 @@ fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
     XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
+    work_dir = r"/Users/hanjunjie/Master_3/1-IUGG/PPPRTK"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
+    work_dir = r"/cache/hanjunjie/Project/C-ZTD/TEST"
 import great2_generate_xml as gen_xml
 import Linux_Win_HJJ as Run
 PURPOSE = "PPPRTKClient"
 
 ##----------Python Log----------##
 ##----------SET 1----------##
-work_dir = r"/Users/hanjunjie/Master_3/XML_py_test"
+if not os.path.exists(work_dir):
+    Run.mkdir(work_dir)
 software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid230629/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
@@ -54,17 +57,27 @@ for cur_site in site_temp:
 
 
 # SET PATH
-upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
-obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
-nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
-sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
-clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
-aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
-grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+if (cur_platform == "Darwin"):
+    upd_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/UPD".format(year)
+    obs_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
+    aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+    grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+else:
+    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+    obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
+    nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
+    clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
+    aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+    grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 
 client_EPN1 = ["ONSA","ONS1","SPT7","SPT0"]
 client_EPN2 = ["TLMF","TLSE","EBRE"]
 client_EPN_GER = ["PTBB","REDU","KOS1"]
+client_HK = ["HKLT"]
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
@@ -103,6 +116,8 @@ while count_int > 0:
             area = "EPN2"
         elif cur_site in client_EPN_GER:
             area = "EPN_GER"
+        elif cur_site in client_HK:
+            area = "CHN_HK"
         else:
             sys.exit()
         gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length),cur_site,area)
