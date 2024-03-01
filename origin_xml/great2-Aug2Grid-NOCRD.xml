@@ -84,6 +84,7 @@
 		<CountLat>  4 </CountLat>
 		<rec_rm> TLMF  TLSG  TLSE </rec_rm>
 		<min_site> 3 </min_site>
+    <poly_par_num> 4 </poly_par_num>
     
 		<bias_sigma> 0 </bias_sigma>		
 		<bias_wgt> SIGMA </bias_wgt>

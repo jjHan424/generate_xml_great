@@ -17,8 +17,8 @@ if (cur_platform == "Darwin"):
     work_dir = r"/Users/hanjunjie/Master_3/1-IUGG/AUG2GRID"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
-    XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-Aug2Grid.xml"
-    work_dir = r"/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+    XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-Aug2Grid-NOCRD.xml"
+    work_dir = r"/data02/hanjunjie/Project/B-THESIS/GRID/EPN_GER_NEW"
 import great2_generate_xml as gen_xml
 import Linux_Win_HJJ as Run
 PURPOSE = "AUG2GRID"
@@ -26,7 +26,7 @@ if not os.path.exists(work_dir):
     Run.mkdir(work_dir)
 ##----------Python Log----------##
 ##----------SET 1----------##
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231125/build_Linux/Bin"
+software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid240126/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -165,6 +165,8 @@ while count_int > 0:
     gen_xml.change_outputs_log(cur_xml_name,PURPOSE)
     #Change receiver
     gen_xml.set_receiver_parameter(cur_xml_name,site_list,site_xyz)
+    gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","min_site","8")
+    gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","poly_par_num","4")
     if area == "EPN2":
         gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","bias_baseline","500")
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))

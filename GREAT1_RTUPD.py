@@ -146,8 +146,8 @@ while count_int > 0:
     ##--------Start the Programe#--------##
     # Run.run_app(software,"great_npp",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     if os.path.exists("upd_nl"):
-        shutil.copyfile("upd_nl",os.path.join(work_dir,"UPD_BNC","upd_nl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
-        shutil.copyfile("upd_wl",os.path.join(work_dir,"UPD_BNC","upd_wl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
+        shutil.copyfile("upd_nl",os.path.join(work_dir,"UPD_SAVE","upd_nl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
+        shutil.copyfile("upd_wl",os.path.join(work_dir,"UPD_SAVE","upd_wl_{:0>4}{:0>3}_GEC".format(year_int,doy_int)))
     for cur_site in site_list:
         if os.path.exists("{}_resfile".format(cur_site)):
             os.remove("{}_resfile".format(cur_site))
