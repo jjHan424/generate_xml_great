@@ -78,7 +78,7 @@ def change_gen(xmlfile = "great2.1.xml",year = 2021,doy = 310, hour = 0, s_lengt
     gen_rec = gen.find("rec")
     gen_rec.text = ""
     for cur_site in site_list:
-        gen_rec.text = gen_rec.text + " " + cur_site + " "
+        gen_rec.text = gen_rec.text + " " + cur_site.upper() + " "
     #Change BDS Band for B2 or B3
     if ("C3" in cur_sys):
         root.find("bds").find("band").text = " 2 6 "
@@ -236,11 +236,18 @@ def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
         inputs_eop.text="/Users/hanjunjie/Master_3/Data/model/poleut1_2023"
         inputs_lep.text="/Users/hanjunjie/Master_3/Data/model/leap_seconds"
     else:
-        inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
-        inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
-        inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
-        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_2023"
-        inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+        if "C2" in cur_sys:
+            inputs_atx.text="/cache/hanjunjie/Project/A-Paper-1/model/igs_absolute_14_BDS.atx"
+            inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
+            inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
+            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
+            inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+        else:
+            inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
+            inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
+            inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
+            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
+            inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
     tree.write(xmlfile)
 
 #Change XML inputs system file for great1
@@ -258,11 +265,18 @@ def change_inputs_sys_great1(xmlfile = "great2.1.xml",cur_sys = "GEC"):
         inputs_eop.text="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/poleut1"
         inputs_lep.text="/Users/hanjunjie/Master_3/Data/2023/model_BDS3/leap_seconds"
     else:
-        inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
-        inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
-        inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
-        inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_2023"
-        inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+        if "C2" in cur_sys:
+            inputs_atx.text="/cache/hanjunjie/Project/A-Paper-1/model/igs_absolute_14_BDS.atx"
+            inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
+            inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
+            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
+            inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+        else:
+            inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
+            inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
+            inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
+            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
+            inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
     run_mkdir.mkdir("upd")
     tree.write(xmlfile)
 

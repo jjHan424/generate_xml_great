@@ -99,6 +99,13 @@ elif area == "EPNGER7":
     RefLon,RefLat = 4.0610,51.1184
     SpaceLon,SpaceLat = 0.6,0.6
     CountLon,CountLat = 6,3
+elif area == "EPNBIG":
+    aug_path = "/cache/hanjunjie/Project/C-ZTD/AUG/EPN_BIG"
+    site_list = ["BORJ", "MOPS", "BRUX", "HEL2", "PORE", "PADO", "TREU", "WSRT", "LDB2", "FFMJ", "BRMG", "CTAB", "OBE4", "GOR2", "CMEL", "BZR2", "M0SE", "BADH", "CRAK", "IGM2", "BRMF", "TEOS", "LIGN", "POTS", "GENO", "GOPE", "ELBA", "CPAR", "DLF1", "HOFJ", "SBG2", "WTZZ", "TIT2", "CIMO", "AJAC", "GWWL", "REDU", "IJMU", "IGMI", "WTZS", "PFA3", "POPI", "FRNE", "VLFR", "AUBG", "DOUR", "KUNZ", "GOP6", "DILL", "ASIR", "COMO", "MARS", "WTZR", "LEIJ", "GRAS", "ARA2", "PRAT", "GRAZ", "TORI", "BOR1", "PALB", "KLOP", "BYDG", "BUDD", "CFRM", "BSCN", "VIRG", "GRAC", "VTRB", "BSVZ", "DUB2", "WROC", "POZE", "UNPG", "ENTZ", "SAS2", "WARE", "CLIB", "LINZ", "PTBB", "BUDP", "DVCN", "TUBO", "TERS", "GARI", "TRMI", "ISRN", "MOP2", "BAUT", "AXPV", "UBEN", "DIEP", "HOBU", "PZA2", "AUTN", "RANT", "TRF2", "WARN", "CAKO", "WRLG", "KDA2", "GOET", "LCRA", "EUSK", "GELL", "ZADA", "IENG", "EIJS", "SRJV", "REDZ", "MEDI", "AQUI", "VEN1", "ZIM2", "ENZA", "HELG", "GSR1", "RIVO", "KARL", "KOS1"] 
+    Mask = "EPNBIG"
+    RefLon,RefLat = 3.99,55.93
+    SpaceLon,SpaceLat = 1.5,1.5
+    CountLon,CountLat = 11,11
 elif area == "CHNWH9":
     aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
     site_list = ["N028","N047","N068","WHDS","WHSP","WHXZ","XGXN","WHYJ","WUDA"]

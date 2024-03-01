@@ -136,7 +136,7 @@ def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
 
 # Download ZPD File with one site
 def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX"):
-    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy))
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN_TEST","{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
     file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
