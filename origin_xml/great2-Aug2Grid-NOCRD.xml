@@ -23,6 +23,15 @@
      /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/CREU-GEC.aug
      /cache/hanjunjie/Project/C-ZTD/AUG/2021310/server/CASE-GEC.aug
 </aug>
+<rinexn>
+     /Users/hanjunjie/Master_3/Data/2021/NAV/brdm3110.21n
+</rinexn>
+<rinexc>
+     /Users/hanjunjie/Master_3/Data/2021/CLK/gfz21830.clk
+</rinexc>
+   <sp3>
+     /Users/hanjunjie/Master_3/Data/2021/SP3/gfz21830.sp3
+</sp3>
  </inputs>
 
  <outputs append="false" verb="2">
