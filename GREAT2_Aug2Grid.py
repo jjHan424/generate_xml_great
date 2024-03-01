@@ -140,6 +140,19 @@ for cur_site_short in site_list:
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
+if (cur_platform == "Darwin"):
+    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+    obs_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
+else:
+    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
+    obs_path = "/data02/hanjunjie/Data/{:0>4}/OBS".format(year)
+    nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
+    clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
+
 while count_int > 0:
     #Check and Make Dir
     os.chdir(work_dir)
@@ -159,6 +172,10 @@ while count_int > 0:
     gen_xml.change_ionogrid(cur_xml_name,area,grid_mode,[RefLat,RefLon],[SpaceLat,SpaceLon],[CountLat,CountLon],rm_site_list,ck_site_list)
     #Change input aug
     gen_xml.change_inputs_aug(cur_xml_name,aug_path,year_int,doy_int,int(hour),int(s_length),site_list)
+    # Change input nav
+    gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
+    # Change input sp3clk
+    gen_xml.change_inputs_sp3clk(cur_xml_name,"gfz",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
     #Change outputs auggrid
     gen_xml.change_outputs_aug2grid(cur_xml_name,area,rm_site_list,ck_site_list,cur_sys,int(sampling))
     #Change outputs log

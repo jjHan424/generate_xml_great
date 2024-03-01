@@ -15,7 +15,7 @@ if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
     XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 else:
-    work_dir = r"/cache/hanjunjie/Project/C-ZTD/ZTD_PPP"
+    work_dir = r"/data02/hanjunjie/Project/B-THESIS/AUG"
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 import great2_generate_xml as gen_xml
@@ -25,7 +25,7 @@ PURPOSE = "PPPRTKServer"
 ##----------Python Log----------##
 ##----------SET 1----------##
 
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_ZTD231109/build_Linux/Bin"
+software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid240126/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -50,8 +50,14 @@ reset_par = sys.argv[10]
 #site list generate
 site_list = []
 site_temp = site.split("_")
-if "EPN_GER" in site_list:
+if "EPNGER" in site_temp:
     site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
+elif "CHNHK" in site_temp:
+    site_list = ["HKCL","HKKS","HKKT","HKLM","HKLT","HKMW","HKNP","HKOH","HKPC","HKSC","HKSL","HKSS","HKST","HKTK","HKWS","T430"]
+    site_list_new = []
+    for cur_site in site_list:
+        site_list_new.append(cur_site.lower())
+    site_list = site_list_new
 else:
     for cur_site in site_temp:
         if cur_site != "NONE":
@@ -68,8 +74,8 @@ if (cur_platform == "Darwin"):
     sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
     clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
 else:
-    upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
-    obs_path = "/cache/hanjunjie/Data/{:0>4}/OBS_EPN".format(year)
+    upd_path = "/data02/hanjunjie/Project/B-THESIS/UPD_GFZ_CHN_BDS2/UPD_SAVE"
+    obs_path = "/data02/hanjunjie/Data/{:0>4}/OBS".format(year)
     nav_path = "/cache/hanjunjie/Data/{:0>4}/NAV".format(year)
     sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
     clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
@@ -119,7 +125,7 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     ##--------Start the Programe#--------##
-    Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
