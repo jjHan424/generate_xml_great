@@ -90,14 +90,17 @@ else:
     file = open('/cache/hanjunjie/Software/Tools/generate_xml_great/sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
 site_list_csv = csv.DictReader(file)
 site_xyz = {}
+site_list_new = []
 for cur_dic in site_list_csv:
     for cur_site_short in site_list:
         if cur_site_short.upper() in cur_dic["Name"]:
             site_xyz[cur_site_short] = [float(cur_dic["X"]),float(cur_dic["Y"]),float(cur_dic["Z"])]
-for cur_site_short in site_list:
-    if cur_site_short not in site_xyz.keys():
-        logging.error("There is no long name for {}!!!".format(cur_site_short))
-        site_xyz[cur_site_short] = [0,0,0]
+            site_list_new.append(cur_site_short)
+site_list = site_list_new
+# for cur_site_short in site_list:
+#     if cur_site_short not in site_xyz.keys():
+#         logging.error("There is no long name for {}!!!".format(cur_site_short))
+#         site_xyz[cur_site_short] = [0,0,0]
 
 # SET PATH
 if (cur_platform == "Darwin"):

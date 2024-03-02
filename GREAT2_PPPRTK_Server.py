@@ -8,6 +8,7 @@ import xml.etree.ElementTree as et
 import logging
 import platform
 from datetime import datetime
+import csv
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
@@ -80,6 +81,21 @@ else:
     sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
     clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
 
+if (cur_platform == "Darwin"):
+    file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+else:
+    file = open('/cache/hanjunjie/Software/Tools/generate_xml_great/sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+site_list_csv = csv.DictReader(file)
+site_xyz = {}
+for cur_dic in site_list_csv:
+    for cur_site_short in site_list:
+        if cur_site_short in cur_dic["Name"]:
+            site_xyz[cur_site_short] = [float(cur_dic["X"]),float(cur_dic["Y"]),float(cur_dic["Z"])]
+for cur_site_short in site_list:
+    if cur_site_short not in site_xyz.keys():
+        logging.error("There is no long name for {}!!!".format(cur_site_short))
+        site_xyz[cur_site_short] = [0,0,0]
+
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
 while count_int > 0:
@@ -119,6 +135,7 @@ while count_int > 0:
     gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
     #Change receiver
     gen_xml.reset_receiver_parameter(cur_xml_name,site_list)
+    # gen_xml.set_receiver_parameter(cur_xml_name,site_list,site_xyz)
     #Change for ZTD out
     gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
     gen_xml.change_node_subnode_string(cur_xml_name,"npp","ipp_out","TRUE")
