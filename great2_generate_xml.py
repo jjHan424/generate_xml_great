@@ -107,7 +107,7 @@ def change_ionogrid(xmlfile = "great2.1.xml",area = "WUHAN",wgt_mode = "GRID",re
     tree.write(xmlfile)
 
 #Change XML inputs aug
-def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""]):
+def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""],cur_sys = "GEC3"):
     tree = et.parse(xmlfile)
     inputs_aug = tree.getroot().find("inputs").find("aug")
     day_length = 1
@@ -124,7 +124,7 @@ def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, 
     while (count_day < day_length):
         day = doy + count_day
         for cur_site in site_list:
-            inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-GEC.aug") + "\n"
+            inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}-FIXED-30.aug".format(cur_sys)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 

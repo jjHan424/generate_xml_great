@@ -53,6 +53,8 @@ site_list = sys.argv[5].split("_")
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 #AUG_EPN1
 site_list = ["PTBB","REDU","KOS1","WSRT","BRUX","TIT2"]
+#EPNBIG
+site_list = ["KLOP","BYDG","BUDD","CFRM","BSCN","VIRG","GRAC","VTRB","BSVZ","DUB2","WROC","POZE","UNPG","ENTZ","SAS2","WARE","CLIB","LINZ","PTBB","BUDP","DVCN","TUBO","TERS","MOPI","GARI","TRMI","ISRN","MOP2","BAUT","AXPV","UBEN","DIEP","HOBU","PZA2","AUTN","MSEL","RANT","TRF2","WARN","CAKO","WRLG","KDA2","GOET","LCRA","EUSK","GELL","ZADA","IENG","BOLG","EIJS","SRJV","REDZ","MEDI","AQUI","VEN1","ZIM2","ENZA","HELG","GSR1","RIVO","KARL","KOS1"]
 # site_list = site_list.split()
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 

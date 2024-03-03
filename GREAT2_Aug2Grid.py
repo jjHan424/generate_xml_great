@@ -100,7 +100,7 @@ elif area == "EPNGER7":
     SpaceLon,SpaceLat = 0.6,0.6
     CountLon,CountLat = 6,3
 elif area == "EPNBIG":
-    aug_path = "/cache/hanjunjie/Project/C-ZTD/AUG/EPN_BIG"
+    aug_path = "/data02/hanjunjie/Project/B-THESIS/AUG/EPN_BIG"
     site_list = ["BORJ", "MOPS", "BRUX", "HEL2", "PORE", "PADO", "TREU", "WSRT", "LDB2", "FFMJ", "BRMG", "CTAB", "OBE4", "GOR2", "CMEL", "BZR2", "M0SE", "BADH", "CRAK", "IGM2", "BRMF", "TEOS", "LIGN", "POTS", "GENO", "GOPE", "ELBA", "CPAR", "DLF1", "HOFJ", "SBG2", "WTZZ", "TIT2", "CIMO", "AJAC", "GWWL", "REDU", "IJMU", "IGMI", "WTZS", "PFA3", "POPI", "FRNE", "VLFR", "AUBG", "DOUR", "KUNZ", "GOP6", "DILL", "ASIR", "COMO", "MARS", "WTZR", "LEIJ", "GRAS", "ARA2", "PRAT", "GRAZ", "TORI", "BOR1", "PALB", "KLOP", "BYDG", "BUDD", "CFRM", "BSCN", "VIRG", "GRAC", "VTRB", "BSVZ", "DUB2", "WROC", "POZE", "UNPG", "ENTZ", "SAS2", "WARE", "CLIB", "LINZ", "PTBB", "BUDP", "DVCN", "TUBO", "TERS", "GARI", "TRMI", "ISRN", "MOP2", "BAUT", "AXPV", "UBEN", "DIEP", "HOBU", "PZA2", "AUTN", "RANT", "TRF2", "WARN", "CAKO", "WRLG", "KDA2", "GOET", "LCRA", "EUSK", "GELL", "ZADA", "IENG", "EIJS", "SRJV", "REDZ", "MEDI", "AQUI", "VEN1", "ZIM2", "ENZA", "HELG", "GSR1", "RIVO", "KARL", "KOS1"] 
     Mask = "EPNBIG"
     RefLon,RefLat = 3.99,55.93
@@ -114,7 +114,7 @@ elif area == "CHNWH9":
     SpaceLon,SpaceLat = 0.5,0.5
     CountLon,CountLat = 5,4
 elif area == "CHNHK16":
-    aug_path = "/cache/hanjunjie/Project/B-IUGG/AUG_EPN_UPD_UC"
+    aug_path = "/data02/hanjunjie/Project/B-THESIS/AUG"
     site_list = ["HKCL","HKKS","HKKT","HKLM","HKLT","HKMW","HKNP","HKOH","HKPC","HKSC","HKSL","HKSS","HKST","HKTK","HKWS","T430"]
     Mask = "CHNHK16"
     RefLon,RefLat = 113.86,22.58
@@ -171,7 +171,7 @@ while count_int > 0:
     #Change ionogrid
     gen_xml.change_ionogrid(cur_xml_name,area,grid_mode,[RefLat,RefLon],[SpaceLat,SpaceLon],[CountLat,CountLon],rm_site_list,ck_site_list)
     #Change input aug
-    gen_xml.change_inputs_aug(cur_xml_name,aug_path,year_int,doy_int,int(hour),int(s_length),site_list)
+    gen_xml.change_inputs_aug(cur_xml_name,aug_path,year_int,doy_int,int(hour),int(s_length),site_list,cur_sys)
     # Change input nav
     gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
     # Change input sp3clk
