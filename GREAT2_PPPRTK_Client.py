@@ -17,7 +17,7 @@ if (cur_platform == "Darwin"):
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
-    work_dir = r"/cache/hanjunjie/Project/C-ZTD/TEST"
+    work_dir = r"/data02/hanjunjie/Project/B-THESIS/PPPRTK/EPN_GER_AUG"
 import great2_generate_xml as gen_xml
 import Linux_Win_HJJ as Run
 PURPOSE = "PPPRTKClient"
@@ -26,7 +26,7 @@ PURPOSE = "PPPRTKClient"
 ##----------SET 1----------##
 if not os.path.exists(work_dir):
     Run.mkdir(work_dir)
-software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid230629/build_Linux/Bin"
+software = r"/cache/hanjunjie/Software/GREAT/great2.1_grid240126/build_Linux/Bin"
 cur_time = datetime.utcnow()
 log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -72,11 +72,11 @@ else:
     sp3_path = "/cache/hanjunjie/Data/{:0>4}/SP3".format(year)
     clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
     aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
-    grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+    grid_path = "/data02/hanjunjie/Project/B-THESIS/GRID/NEW"
 
 client_EPN1 = ["ONSA","ONS1","SPT7","SPT0"]
 client_EPN2 = ["TLMF","TLSE","EBRE"]
-client_EPN_GER = ["PTBB","REDU","KOS1"]
+client_EPN_GER = ["REDU","KOS1","WSRT","BRUX","FFMJ"]
 client_HK = ["HKLT"]
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
@@ -92,52 +92,56 @@ while count_int > 0:
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     # For Multi Sites
-    for cur_site in site_list:
-        #Copy XML File
-        cur_xml_name = "great-PPPRTK-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(cur_site,year_int,doy_int,cur_time.minute,cur_time.second)
-        shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
-        #Change Gen
-        gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),[cur_site])
-        gen_xml.change_node_subnode_string(cur_xml_name,"gen","rover",cur_site)
-        #Change AMB and Inputs UPD
-        gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","SEARCH")
-        gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
-        gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","wgt_mode",aug_mode)
-        # Change input obs
-        gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),[cur_site])
-        # Change input nav
-        gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
-        # Change input sp3clk
-        gen_xml.change_inputs_sp3clk(cur_xml_name,"gfz",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
-        # Change input auggrid
-        if cur_site in client_EPN1:
-            area = "EPN1"
-        elif cur_site in client_EPN2:
-            area = "EPN2"
-        elif cur_site in client_EPN_GER:
-            area = "EPN_GER"
-        elif cur_site in client_HK:
-            area = "CHN_HK"
-        else:
-            sys.exit()
-        gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length),cur_site,area)
-        # Change system file
-        gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
-        #Change outputs auggrid
-        # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
-        gen_xml.change_outputs_client(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
-        #Change outputs log
-        gen_xml.change_outputs_log(cur_xml_name,cur_site)
-        #Change filter any
-        gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
-        #Change receiver
-        gen_xml.reset_receiver_parameter(cur_xml_name,[cur_site])
-        #Change for ZTD out
-        gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
-        logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
-        logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
-        ##--------Start the Programe#--------##
-        # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
+    # Temp for pre
+    for i in range(0,21):
+        for cur_site in site_list:
+            #Copy XML File
+            cur_xml_name = "great-PPPRTK-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(cur_site,year_int,doy_int,cur_time.minute,cur_time.second)
+            shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
+            #Change Gen
+            gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),[cur_site])
+            gen_xml.change_node_subnode_string(cur_xml_name,"gen","rover",cur_site)
+            #Change AMB and Inputs UPD
+            gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","SEARCH")
+            gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
+            gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","wgt_mode",aug_mode)
+            # Change input obs
+            gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),[cur_site])
+            # Change input nav
+            gen_xml.change_inputs_nav(cur_xml_name,"brdm",nav_path,year_int,doy_int,int(hour),int(s_length))
+            # Change input sp3clk
+            gen_xml.change_inputs_sp3clk(cur_xml_name,"gfz",sp3_path,clk_path,year_int,doy_int,int(hour),int(s_length))
+            # Change input auggrid
+            if cur_site in client_EPN1:
+                area = "EPN1"
+            elif cur_site in client_EPN2:
+                area = "EPN2"
+            elif cur_site in client_EPN_GER:
+                area = "EPNGER"
+            elif cur_site in client_HK:
+                area = "CHN_HK"
+            else:
+                sys.exit()
+            gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length),cur_site,area,client_EPN_GER,cur_sys)
+            if i > 0:
+                gen_xml.change_node_subnode_string(cur_xml_name,"inputs","aug_grid","/data02/hanjunjie/Project/B-THESIS/PPPRTK/EPN_GER_AUG/{}{:0>3}/{}.grid".format(year_int,doy_int,i))
+            # Change system file
+            gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
+            #Change outputs auggrid
+            # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
+            gen_xml.change_outputs_client(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
+            #Change outputs log
+            gen_xml.change_outputs_log(cur_xml_name,cur_site)
+            #Change filter any
+            gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
+            #Change receiver
+            gen_xml.reset_receiver_parameter(cur_xml_name,[cur_site])
+            #Change for ZTD out
+            gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
+            logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
+            logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
+            ##--------Start the Programe#--------##
+            # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
 
