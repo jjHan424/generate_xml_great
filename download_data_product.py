@@ -17,7 +17,7 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    CRX2RNX = "/Users/hanjunjie/tools/CRX2RNX"
+    CRX2RNX = "/Users/hanjunjie/tools/RNXCMP_4.1.0_MacOSX10.14_gcc/bin/CRX2RNX"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     CRX2RNX = "/home/hanjunjie/tools/CRX2RNX"
@@ -34,6 +34,7 @@ work_dir = "/Users/hanjunjie/Master_3"
 def download(source,file_name_gz,local):
     os.chdir(local)
     cmd = "curl -c .urs_cookies -b .urs_cookies -n -L {} -O".format(source+"/"+file_name_gz)
+    # cmd = "curl -c .urs_cookies -b .urs_cookies -n -L -u 用户名：密码 {} -O".format(source+"/"+file_name_gz)
     try:
         result = subprocess.getstatusoutput(cmd)
         if (os.path.exists(".urs_cookies")):
@@ -53,10 +54,21 @@ def gzip(local,file_name_gz,file_name):
         result = subprocess.getstatusoutput(cmd)
         file_name_gz_value = file_name_gz.split(".")
         file_name_gz_after_gz = file_name_gz_value[0]+"." + file_name_gz_value[1]
+        if (not os.path.exists(file_name_gz_after_gz)):
+            return False
         if (os.path.exists(file_name_gz_after_gz) and file_name != file_name_gz_after_gz):
             os.rename(file_name_gz_after_gz,file_name)
         if (os.path.exists(file_name_gz)):
             os.remove(file_name_gz)
+    except OSError:
+        logging.error("gzip failed for throw except!!!")
+        sys.exit()
+
+def tar(local,file_name_gz,file_name):
+    os.chdir(local)
+    cmd = "tar -xvf {}".format(file_name_gz)
+    try:
+        result = subprocess.getstatusoutput(cmd)
     except OSError:
         logging.error("gzip failed for throw except!!!")
         sys.exit()
@@ -68,6 +80,19 @@ def crx2rnx(local,file_name_d,file_name):
     try:
         result = subprocess.getstatusoutput(cmd)
         result = subprocess.getstatusoutput(cmd_antenna)
+        if (os.path.exists(file_name_d)):
+            os.remove(file_name_d)
+    except OSError:
+        logging.error("crx2rnx failed for throw except!!!")
+        sys.exit()
+
+def crx2rnx_WFY(local,file_name_d,file_name):
+    os.chdir(local)
+    cmd = "{} {}".format(CRX2RNX,file_name_d)
+    # cmd_antenna = "sed -i 's/.*ANTENNA: DELTA H\/E\/N/        0.0000        0.0000        0.0000                  ANTENNA: DELTA H\/E\/N/1' {}".format(file_name)
+    try:
+        result = subprocess.getstatusoutput(cmd)
+        # result = subprocess.getstatusoutput(cmd_antenna)
         if (os.path.exists(file_name_d)):
             os.remove(file_name_d)
     except OSError:
@@ -103,8 +128,10 @@ def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_s
         logging.warn("This File {} exits!!!".format(file_name))
 
 # Download broadcast ephemeris
-def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,cur_nav = "brdm"):
+def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,cur_nav = "brdm",download_cur_file = False):
     save_dir = os.path.join(data_save,"{:0>4}".format(year),"NAV")
+    if download_cur_file:
+        save_dir = data_save
     LH.mkdir(save_dir)
     yy = year-2000
     file_name = "{}{:0>3}0.{:2d}n".format(cur_nav.lower(),doy,yy)
@@ -201,6 +228,76 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
         else:
             logging.info("Obs for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
+
+def download_obs_file_RTK_WFY_NOAA(data_save = ".",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX"):
+    # save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy))
+    save_dir = data_save
+    LH.mkdir(save_dir)
+    yy = year-2000
+    file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
+    file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
+    cddis = "https://cddis.nasa.gov/archive/gnss/data/highrate"
+    noaa = "https://geodesy.noaa.gov/corsdata/rinex"
+    source_raw = noaa
+    if (not os.path.exists(os.path.join(save_dir,file_name))):
+        y_temp,mon,date = doy2ymd((year),(doy))
+        weekd = ymd2gpsweekday(int(year),mon,date)
+        week = int(weekd/10)
+        download_bool = False
+        # Different time different version of rinex
+        # From NOAA
+        file_name_gz = "{}{:0>3}0.{:2d}d.gz".format(cur_site.lower(),doy,yy)
+        source_file = source_raw + "/{:0>4}/{:0>3}/{}".format(year,doy,cur_site.lower())
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            if (gzip(save_dir,file_name_gz,file_name_d)):
+                download_bool = True
+        if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
+            crx2rnx_WFY(save_dir,file_name_d,file_name)
+        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
+        else:
+            logging.info("Obs for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
+
+def download_obs_file_RTK_WFY_CDDIS(data_save = ".",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX"):
+    # save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy))
+    save_dir = data_save
+    LH.mkdir(save_dir)
+    yy = year-2000
+    file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
+    file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
+    cddis = "https://cddis.nasa.gov/archive/gnss/data/highrate"
+    noaa = "https://geodesy.noaa.gov/corsdata/rinex"
+    source_raw = noaa
+    if (not os.path.exists(os.path.join(save_dir,"gnss"))):
+        y_temp,mon,date = doy2ymd((year),(doy))
+        weekd = ymd2gpsweekday(int(year),mon,date)
+        week = int(weekd/10)
+        download_bool = False
+        # Different time different version of rinex
+        # From CDDIS
+        source_raw = cddis
+        file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_01S_MO.crx.tar".format(cur_site_long,year,doy)
+        source_file = source_raw + "/{:0>4}/{:0>3}".format(year,doy,cur_site.lower())
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            tar(save_dir,file_name_gz,file_name_d)
+            download_bool = True
+        # download_bool = True
+        # tar(save_dir,file_name_gz,file_name_d)
+        os.chdir(os.path.join(".","gnss","data","highrate","{:0>4}".format(year),"{:0>3}".format(doy),"{}d".format(yy)))
+        if download_bool:
+            for i in range(24):
+                os.chdir("{:0>2}".format(i))
+                for j in range(4):
+                    file_name_gz = "{}_S_{:0>4}{:0>3}{:0>2}{:0>2}_15M_01S_MO.crx.gz".format(cur_site_long,year,doy,i,j*15)
+                    file_name_d = "{}{:0>3}{}.{:2d}d".format(cur_site.upper(),doy,j+1,yy)
+                    if os.path.exists(os.path.join(save_dir,file_name_gz)):
+                        gzip(save_dir,file_name_gz,file_name_d)
+                        crx2rnx_WFY(save_dir,file_name_d,file_name)
+                os.chdir("..")
     else:
         logging.warn("This File {} exits!!!".format(file_name))
 

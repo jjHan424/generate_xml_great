@@ -73,6 +73,7 @@ else:
     clk_path = "/cache/hanjunjie/Data/{:0>4}/CLK".format(year)
     aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
     grid_path = "/data02/hanjunjie/Project/B-THESIS/GRID/NEW"
+    roti_path = ""
 
 client_EPN1 = ["ONSA","ONS1","SPT7","SPT0"]
 client_EPN2 = ["TLMF","TLSE","EBRE"]
@@ -129,7 +130,7 @@ while count_int > 0:
             gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
             #Change outputs auggrid
             # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
-            gen_xml.change_outputs_client(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
+            gen_xml.change_outputs_client(cur_xml_name,"FIXED-{}".format(i),cur_sys,int(sampling),int(reset_par))
             #Change outputs log
             gen_xml.change_outputs_log(cur_xml_name,cur_site)
             #Change filter any

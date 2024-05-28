@@ -107,7 +107,7 @@ def change_ionogrid(xmlfile = "great2.1.xml",area = "WUHAN",wgt_mode = "GRID",re
     tree.write(xmlfile)
 
 #Change XML inputs aug
-def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""],cur_sys = "GEC3"):
+def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""],cur_sys = "GEC3",sample = 30):
     tree = et.parse(xmlfile)
     inputs_aug = tree.getroot().find("inputs").find("aug")
     day_length = 1
@@ -124,7 +124,32 @@ def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, 
     while (count_day < day_length):
         day = doy + count_day
         for cur_site in site_list:
-            inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}-FIXED-30.aug".format(cur_sys)) + "\n"
+            if "old" in cur_sys:
+            	inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}.aug".format("GEC")) + "\n"
+            else:
+            	inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}-FIXED-{}.aug".format(cur_sys,sample)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+#Change XML inputs aug
+def change_inputs_roti(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""],cur_sys = "GEC3",sample = 30):
+    tree = et.parse(xmlfile)
+    inputs_aug = tree.getroot().find("inputs").find("roti")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_aug.text = "\n"
+    while (count_day < day_length):
+        day = doy + count_day
+        for cur_site in site_list:
+            inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{}{}{:0>3}_GEC.ismr".format(cur_site.upper(),year,doy)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -148,6 +173,64 @@ def change_inputs_obs(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, 
         day = doy + count_day
         for cur_site in site_list:
             inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"{:0>3}".format(day),"{}{:0>3}0.{:0>2}o".format(cur_site,day,yy)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+def change_inputs_obs_RTK(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""]):
+    tree = et.parse(xmlfile)
+    inputs_obs = tree.getroot().find("inputs").find("rinexo")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_obs.text = "\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        for cur_site in site_list:
+            inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"{}{:0>3}0.{:0>2}o".format(cur_site,day,yy)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+def change_inputs_obs_RTK_HighRate(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""]):
+    tree = et.parse(xmlfile)
+    inputs_obs = tree.getroot().find("inputs").find("rinexo")
+    day_length = 1
+    hour_length = s_length / 3600
+    start_hour = hour
+    end_hour = start_hour + hour_length
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    
+    inputs_obs.text = inputs_obs.text + "\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        
+        for cur_site in site_list:
+            cur_hour = start_hour
+            while cur_hour <= end_hour:
+                inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"gnss","data","highrate","{:0>4}".format(year),"{:0>3}".format(day),"{}d".format(yy),"{:0>2}".format(cur_hour)
+                                                                        ,"{}{:0>3}1.{:0>2}o".format(cur_site,day,yy))
+                inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"gnss","data","highrate","{:0>4}".format(year),"{:0>3}".format(day),"{}d".format(yy),"{:0>2}".format(cur_hour)
+                                                                        ,"{}{:0>3}2.{:0>2}o".format(cur_site,day,yy))
+                inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"gnss","data","highrate","{:0>4}".format(year),"{:0>3}".format(day),"{}d".format(yy),"{:0>2}".format(cur_hour)
+                                                                        ,"{}{:0>3}3.{:0>2}o".format(cur_site,day,yy))
+                inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"gnss","data","highrate","{:0>4}".format(year),"{:0>3}".format(day),"{}d".format(yy),"{:0>2}".format(cur_hour)
+                                                                        ,"{}{:0>3}4.{:0>2}o".format(cur_site,day,yy)) + "\n"
+                cur_hour = cur_hour + 1
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -200,7 +283,7 @@ def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "defa
     tree.write(xmlfile)
 
 #Change XML inputs auggrid
-def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395,cur_site = "HKSC",area = "HK",client_list = [],cur_sys = "GEC3"):
+def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395,cur_site = "HKSC",area = "HK",client_list = [],cur_sys = "GEC3",sampling = 30):
     tree = et.parse(xmlfile)
     inputs_auggrid = tree.getroot().find("inputs").find("aug_grid")
     day_length = 1
@@ -221,7 +304,7 @@ def change_inputs_auggrid(xmlfile = "great2.1.xml",grid_dir = "default",year = 2
     while (count_day < day_length):
         day = doy + count_day
         # inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{:0>4}{:0>3}".format(year,day),"{}-R-{}-C-CROSS".format(area,cur_site),"GREAT-GEC3-30.grid") + "\n"
-        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{:0>4}{:0>3}".format(year,day),"{}-R-C{}".format(area,site_str),"GREAT-{}-30.grid".format(cur_sys)) + "\n"
+        inputs_auggrid.text = inputs_auggrid.text + "     " + os.path.join(grid_dir,"{:0>4}{:0>3}".format(year,day),"{}-R{}-C-{}".format(area,site_str,"CROSS"),"GREAT-{}-{}.grid".format(cur_sys,sampling)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -353,6 +436,27 @@ def change_outputs_client(xmlfile = "great2.1.xml",amb = "XXXX",cur_sys = "GEC",
         outputs_aug.text = os.path.join("client","$(rec)-{}-{}-{:d}-{}.aug".format(cur_sys,amb,sampling,reset_par))
     tree.write(xmlfile)
 
+#Change XML outputs for Client of PPPRTK (flt aug)
+def change_outputs_RTK(xmlfile = "great2.1.xml",amb = "XXXX",cur_sys = "GEC",sampling = 5,reset_par = 0):
+    tree = et.parse(xmlfile)
+    outputs_ppp = tree.getroot().find("outputs").find("ppp")
+    outputs_flt = tree.getroot().find("outputs").find("flt")
+    outputs_kml = tree.getroot().find("outputs").find("kml")
+    outputs_enu = tree.getroot().find("outputs").find("enu")
+    outputs_log = tree.getroot().find("outputs").find("log")
+    
+    run_mkdir.mkdir("res")
+    if reset_par == 0:
+        outputs_ppp.text = os.path.join("res","$(rec)-RTK-{}-{}-{:d}.ppp".format(cur_sys,amb,sampling))
+        outputs_flt.text = os.path.join("res","$(rec)-RTK-{}-{}-{:d}.flt".format(cur_sys,amb,sampling))
+        outputs_kml.text = os.path.join("res","$(rec)-RTK-{}-{}-{:d}.kml".format(cur_sys,amb,sampling))
+        outputs_enu.text = os.path.join("res","$(rec)-RTK-{}-{}-{:d}.enu".format(cur_sys,amb,sampling))
+        outputs_log.attrib["name"] = os.path.join("res","GREAT-FGO.log")
+    else:
+        outputs_flt.text = os.path.join("client","$(rec)-{}-{}-{:d}-{}.flt".format(cur_sys,amb,sampling,reset_par))
+        # outputs_aug.text = os.path.join("client","$(rec)-{}-{}-{:d}-{}.aug".format(cur_sys,amb,sampling,reset_par))
+    tree.write(xmlfile)
+
 #Change XML anywhere with string
 def change_node_subnode_string(xmlfile = "great2.1.xml",node = "ambiguity",subnode = "fix_mode",data = "NO"):
     tree = et.parse(xmlfile)
@@ -385,6 +489,13 @@ def change_inputs_upd(xmlfile = "great2.1.xml",upd_dir = "default",year = 2021, 
 def change_filter_anystring(xmlfile = "great2.1.xml",attribt = "reset_par",data = "0"):
     tree = et.parse(xmlfile)
     outputs_filter = tree.getroot().find("filter")
+    outputs_filter.attrib[attribt] = data
+    tree.write(xmlfile)
+
+def change_likefilter_anystring(xmlfile = "great2.1.xml",father = "ionogrid",element = "filter",attribt = "reset_par",data = "0"):
+    tree = et.parse(xmlfile)
+    # outputs_father = tree.getroot().find(father)
+    outputs_filter = tree.getroot().find(father).find(element)
     outputs_filter.attrib[attribt] = data
     tree.write(xmlfile)
 
