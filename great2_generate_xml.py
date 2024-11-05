@@ -569,7 +569,7 @@ def check_input(xmlfile = "great2.1.xml"):
                     lack_file[cur_input] = []
                 lack_file[cur_input].append(cur_file)
     for cur_lack_input in lack_file.keys():
-        cur_input_xml = inputs.find(cur_input)
+        cur_input_xml = inputs.find(cur_lack_input)
         cur_file_all = cur_input_xml.text
         cur_file_value = cur_file_all.split("\n")
         for i in range(len(lack_file[cur_lack_input])):
