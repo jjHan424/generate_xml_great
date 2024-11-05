@@ -142,6 +142,11 @@ while count_int > 0:
     logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
     logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
     ##--------Start the Programe#--------##
+    if not gen_xml.check_input(cur_xml_name):
+        logging.error("Skip {:0>3} due to lack file !!!".format(doy_int))
+        doy_int = doy_int + 1
+        count_int = count_int - 1
+        continue
     # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1

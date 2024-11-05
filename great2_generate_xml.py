@@ -127,7 +127,7 @@ def change_inputs_aug(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021, 
             if "old" in cur_sys:
             	inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}.aug".format("GEC")) + "\n"
             else:
-            	inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}-FIXED-{}.aug".format(cur_sys,sample)) + "\n"
+                inputs_aug.text = inputs_aug.text + "     " + os.path.join(aug_dir,"{:0>4}{:0>3}".format(year,day),"server",cur_site+"-{}-FIXED-{}.aug".format(cur_sys,sample)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -548,3 +548,35 @@ def set_receiver_parameter(xmlfile = "great2.1.xml",site_list = [""],site_xyz = 
         cur_site_rec.tail = "\n"
         outputs_parameters.append(cur_site_rec)
     tree.write(xmlfile)
+
+# Check Input Data
+def check_input(xmlfile = "great2.1.xml"):
+    input_list = ["upd","rinexo","rinexn","rinexc","sp3","atx","blq","de","eop","leadsecond","aug"]
+    tree = et.parse(xmlfile)
+    inputs = tree.getroot().find("inputs")
+    lack_file = {}
+    available_process = True
+    for cur_input in input_list:
+        cur_input_xml = inputs.find(cur_input)
+        if cur_input_xml == None:
+            continue
+        cur_file_all = cur_input_xml.text
+        cur_file_value = cur_file_all.split("\n")
+        for i in range(len(cur_file_value)-2):
+            cur_file = cur_file_value[i+1].replace(" ","")
+            if not os.path.exists(cur_file):
+                if cur_input not in lack_file:
+                    lack_file[cur_input] = []
+                lack_file[cur_input].append(cur_file)
+    for cur_lack_input in lack_file.keys():
+        cur_input_xml = inputs.find(cur_input)
+        cur_file_all = cur_input_xml.text
+        cur_file_value = cur_file_all.split("\n")
+        for i in range(len(lack_file[cur_lack_input])):
+            logging.error("{} DOES NOT EXIST !!!".format(lack_file[cur_lack_input][i]))
+        if cur_input == "rinexo" and len(lack_file[cur_lack_input]) == len(cur_file_value) - 2:
+            available_process = False
+        else:
+            available_process = False
+        
+    return available_process

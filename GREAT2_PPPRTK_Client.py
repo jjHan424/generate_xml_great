@@ -12,8 +12,8 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
-    work_dir = r"/Users/hanjunjie/Master_3/1-IUGG/PPPRTK"
+    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-PPPRTK-AUG.xml"
+    work_dir = r"/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Project"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/cache/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
@@ -58,12 +58,12 @@ for cur_site in site_temp:
 
 # SET PATH
 if (cur_platform == "Darwin"):
-    upd_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/UPD".format(year)
-    obs_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/OBS".format(year)
-    nav_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/NAV".format(year)
-    sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
-    clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
-    aug_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
+    upd_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/UPD".format(year)
+    obs_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/CLK".format(year)
+    aug_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/AUG"
     grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 else:
     upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
@@ -92,9 +92,9 @@ while count_int > 0:
         os.mkdir(cur_dir)
     os.chdir(cur_dir)
     logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
-    # For Multi Sites
     # Temp for pre
-    for i in range(0,21):
+    for i in range(1,2):
+        # For Multi Sites
         for cur_site in site_list:
             #Copy XML File
             cur_xml_name = "great-PPPRTK-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(cur_site,year_int,doy_int,cur_time.minute,cur_time.second)
@@ -123,9 +123,18 @@ while count_int > 0:
                 area = "CHN_HK"
             else:
                 sys.exit()
-            gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length),cur_site,area,client_EPN_GER,cur_sys)
-            if i > 0:
-                gen_xml.change_node_subnode_string(cur_xml_name,"inputs","aug_grid","/data02/hanjunjie/Project/B-THESIS/PPPRTK/EPN_GER_AUG/{}{:0>3}/{}.grid".format(year_int,doy_int,i))
+            if aug_mode != "OFF":
+                gen_xml.change_inputs_auggrid(cur_xml_name,grid_path,year_int,doy_int,int(hour),int(s_length),cur_site,area,client_EPN_GER,cur_sys)
+            else:
+                gen_xml.change_node_subnode_string(cur_xml_name,"inputs","aug","/data02/hanjunjie/Project/B-THESIS/PPPRTK/{}-GEC3-FIXED-30-{:0>2}".format(cur_site,i))
+                gen_xml.change_node_subnode_string(cur_xml_name,"npp","self_cor","YES")
+                gen_xml.change_node_subnode_string(cur_xml_name,"npp","obs_level","1")
+                gen_xml.change_node_subnode_string(cur_xml_name,"npp","grid_aug","NO")
+                gen_xml.change_node_subnode_string(cur_xml_name,"npp","p_Ion","{:.5f}".format(i*0.005))
+                gen_xml.change_node_subnode_string(cur_xml_name,"npp","p_Trp","0")
+                gen_xml.change_node_subnode_string(cur_xml_name,"npp","ZTD_OUT","TRUE")
+            # if i > 0:
+            #     gen_xml.change_node_subnode_string(cur_xml_name,"inputs","aug_grid","/data02/hanjunjie/Project/B-THESIS/PPPRTK/EPN_GER_AUG/{}{:0>3}/{}.grid".format(year_int,doy_int,i))
             # Change system file
             gen_xml.change_inputs_sys(cur_xml_name,cur_sys) # Not Complete
             #Change outputs auggrid
@@ -142,6 +151,11 @@ while count_int > 0:
             logging.info("END Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
             logging.info("Start Process {} {:0>4}-{:0>3}".format(PURPOSE,year_int,doy_int))
             ##--------Start the Programe#--------##
+            if not gen_xml.check_input(cur_xml_name):
+                logging.error("Skip {:0>3} due to lack file !!!".format(doy_int))
+                doy_int = doy_int + 1
+                count_int = count_int - 1
+                continue
             # Run.run_app(software,"GREAT_PPPRTK",cur_xml_name,log_dir="./",log_name=PURPOSE+"-app.log")
     doy_int = doy_int + 1
     count_int = count_int - 1
