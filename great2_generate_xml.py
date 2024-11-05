@@ -362,7 +362,7 @@ def change_inputs_sys_great1(xmlfile = "great2.1.xml",cur_sys = "GEC"):
             inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
             inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
             inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
-            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
+            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_2023"
             inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
     run_mkdir.mkdir("upd")
     tree.write(xmlfile)
@@ -551,7 +551,7 @@ def set_receiver_parameter(xmlfile = "great2.1.xml",site_list = [""],site_xyz = 
 
 # Check Input Data
 def check_input(xmlfile = "great2.1.xml"):
-    input_list = ["upd","rinexo","rinexn","rinexc","sp3","atx","blq","de","eop","leadsecond","aug"]
+    input_list = ["upd","rinexo","rinexn","rinexc","sp3","atx","blq","de","eop","leadsecond","aug","DE","poleut1"]
     tree = et.parse(xmlfile)
     inputs = tree.getroot().find("inputs")
     lack_file = {}
