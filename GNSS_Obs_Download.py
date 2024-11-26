@@ -27,6 +27,7 @@ import download_data_product as dl
 CDDIS = "https://cddis.nasa.gov/archive"
 WHU = "ftp://igs.gnsswhu.cn/pub"
 EPN = "ftp://ftp.epncb.oma.be/pub"
+HK = "https://rinex.geodetic.gov.hk/rinex3/"
 cur_time = datetime.utcnow()
 log_path = os.path.join(data_save,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format("DOWNLOAD",cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
 logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
@@ -80,6 +81,8 @@ while count_int > 0:
         logging.info("START Obs Site = {}-{}, Year ={:0>4} , Doy = {:0>3}".format(cur_site_short,site_dict_short_long[cur_site_short],year_int,doy_int))
         if data_centre == "EPN":
             dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
+        elif data_centre == "HK":
+            dl.download_obs_file_HK(data_save,HK,year_int,doy_int,cur_site_short)
         else:
             logging.error("{} is not support".format(data_centre))
     doy_int = doy_int + 1

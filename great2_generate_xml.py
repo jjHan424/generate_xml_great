@@ -317,11 +317,11 @@ def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     inputs_eop = tree.getroot().find("inputs").find("eop")
     inputs_lep = tree.getroot().find("inputs").find("leapsecond")
     if cur_platform == "Darwin":
-        inputs_atx.text="/Users/hanjunjie/Master_3/Data/model/igs_absolute_14.atx"
-        inputs_blq.text="/Users/hanjunjie/Master_3/Data/model/oceanload"
-        inputs_de.text ="/Users/hanjunjie/Master_3/Data/model/jpleph_de405_great"
-        inputs_eop.text="/Users/hanjunjie/Master_3/Data/model/poleut1_2023"
-        inputs_lep.text="/Users/hanjunjie/Master_3/Data/model/leap_seconds"
+        inputs_atx.text="/Users/hanjunjie/GREAT/model/igs_absolute_14.atx"
+        inputs_blq.text="/Users/hanjunjie/GREAT/model/oceanload"
+        inputs_de.text ="/Users/hanjunjie/GREAT/model/jpleph_de405_great"
+        inputs_eop.text="/Users/hanjunjie/GREAT/model/poleut1_2023"
+        inputs_lep.text="/Users/hanjunjie/GREAT/model/leap_seconds"
     else:
         if "C2" in cur_sys:
             inputs_atx.text="/cache/hanjunjie/Project/A-Paper-1/model/igs_absolute_14_BDS.atx"
@@ -562,6 +562,9 @@ def check_input(xmlfile = "great2.1.xml"):
             continue
         cur_file_all = cur_input_xml.text
         cur_file_value = cur_file_all.split("\n")
+        if len(cur_file_value) == 1:
+            cur_file_value.append('')
+            cur_file_value.insert(0,'')
         for i in range(len(cur_file_value)-2):
             cur_file = cur_file_value[i+1].replace(" ","")
             if not os.path.exists(cur_file):

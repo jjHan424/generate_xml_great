@@ -161,9 +161,9 @@ def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
     else:
         logging.warn("This File {} exits!!!".format(file_name))
 
-# Download ZPD File with one site
+# Download Obs File from EPN with one site
 def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX"):
-    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy))
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
     file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
@@ -221,6 +221,35 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name_d)
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with short name with rinex2".format(cur_site,year,doy))
+            download_bool = True
+        if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
+            crx2rnx(save_dir,file_name_d,file_name)
+        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
+        else:
+            logging.info("Obs for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
+
+# Download Obs File from HongKong with one site
+def download_obs_file_HK(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",sample = 30):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy))
+    LH.mkdir(save_dir)
+    yy = year-2000
+    file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
+    file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
+    site_name_lower = cur_site.lower()
+    if (not os.path.exists(os.path.join(save_dir,file_name))):
+        y_temp,mon,date = doy2ymd((year),(doy))
+        weekd = ymd2gpsweekday(int(year),mon,date)
+        week = int(weekd/10)
+        # Different time different version of rinex
+        #RINEX3 first From Receiver data MO
+        file_name_gz = "{}00HKG_R_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site.upper(),year,doy)
+        source_file = source_raw + "/{:0>4}/{:0>3}/{}/{}s".format(year,doy,site_name_lower,sample)
+        download_bool = False
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name_d)
             download_bool = True
         if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
             crx2rnx(save_dir,file_name_d,file_name)
