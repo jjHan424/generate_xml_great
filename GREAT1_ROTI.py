@@ -66,7 +66,6 @@ else:
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
-Run.mkdir(os.path.join(work_dir,"UPD_SAVE"))
 while count_int > 0:
     #Check and Make Dir
     os.chdir(work_dir)
@@ -80,6 +79,7 @@ while count_int > 0:
     #Copy XML File
     cur_xml_name = "great-ROTI-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(year_int,doy_int,cur_time.minute,cur_time.second)
     shutil.copy(XML_origin_path,"{}".format(cur_xml_name))
+    Run.mkdir(os.path.join("roti"))
     #Change Gen
     gen_xml.change_gen(cur_xml_name,year_int,doy_int,int(hour),int(s_length),cur_sys,int(sampling),site_list)
     # Change input obs
