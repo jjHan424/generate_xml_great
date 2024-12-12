@@ -83,6 +83,7 @@ client_EPN1 = ["ONSA","ONS1","SPT7","SPT0"]
 client_EPN2 = ["TLMF","TLSE","EBRE"]
 client_EPN_GER = ["REDU","KOS1","WSRT","BRUX","FFMJ"]
 client_HK = ["HKLT"]
+area = "NONE"
 
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 logging.info("##--START ALL--##")
