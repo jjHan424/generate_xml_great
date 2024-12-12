@@ -12,7 +12,7 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-PPPRTK-AUG.xml"
+    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
     work_dir = r"/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Project"
 else:
     sys.path.insert(0,"/data02/hanjunjie/Software/Tools/generate_xml_great")
@@ -28,6 +28,8 @@ if not os.path.exists(work_dir):
     Run.mkdir(work_dir)
 software = r"/data02/hanjunjie/Software/GREAT/great2.1_ZTD241211/build_Linux/Bin"
 cur_time = datetime.utcnow()
+log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}.pylog".format(PURPOSE,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second))
+logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
 ##----------SET 2 (ARGV)----------##
 if len(sys.argv) < 11:
     logging.error("Not Enough argv! Please Check")
@@ -95,8 +97,6 @@ while count_int > 0:
     os.chdir(cur_dir)
     # For Multi Sites
     for cur_site in site_list:
-        log_path = os.path.join(work_dir,"{}-{:0>4d}{:0>3d}-{}.pylog".format(PURPOSE,year_int,doy_int,cur_site))
-        logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fmt)
         logging.info("START Generate XML {:0>4}-{:0>3}".format(year_int,doy_int))
         #Copy XML File
         cur_xml_name = "great-PPPRTK-{}-{:0>4}-{:0>3}-min-{}-sec-{}.xml".format(cur_site,year_int,doy_int,cur_time.minute,cur_time.second)
@@ -139,7 +139,7 @@ while count_int > 0:
         # gen_xml.change_outputs_aug(cur_xml_name,"FIXED",cur_sys,int(sampling),int(reset_par))
         gen_xml.change_outputs_client(cur_xml_name,amb,cur_sys,int(sampling),int(reset_par))
         #Change outputs log
-        gen_xml.change_outputs_log(cur_xml_name,cur_site,"DOY",cur_site,year_int,doy_int)
+        gen_xml.change_outputs_log(cur_xml_name,PURPOSE,"DOY",cur_site,year_int,doy_int)
         #Change filter any
         gen_xml.change_filter_anystring(cur_xml_name,"reset_par",reset_par)
         #Change receiver
