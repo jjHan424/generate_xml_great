@@ -368,14 +368,14 @@ def change_inputs_sys_great1(xmlfile = "great2.1.xml",cur_sys = "GEC"):
     tree.write(xmlfile)
 
 #Change XML outputs log
-def change_outputs_log(xmlfile = "great2.1.xml",purpose = "ByHjj",mode = "TIME"):
+def change_outputs_log(xmlfile = "great2.1.xml",purpose = "ByHjj",mode = "TIME",site = "HKSC",year = 2024,doy=1):
     tree = et.parse(xmlfile)
     outputs_log = tree.getroot().find("outputs").find("log")
     cur_time = datetime.utcnow()
     if mode == "TIME":
         outputs_log.attrib["name"] = "{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}".format(purpose,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second)
     else:
-        outputs_log.attrib["name"] = "{}-{}-{:0>4d}{:0>2d}{:0>2d}-{:0>2d}:{:0>2d}:{:0>2d}".format(purpose,mode,cur_time.year,cur_time.month,cur_time.day,cur_time.hour,cur_time.minute,cur_time.second)
+        outputs_log.attrib["name"] = "{}-{}-{:0>4d}{:0>3d}".format(purpose,site,year,doy)
     tree.write(xmlfile)
  
  #Change XML outputs aug
