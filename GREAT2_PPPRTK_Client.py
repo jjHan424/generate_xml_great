@@ -110,6 +110,7 @@ while count_int > 0:
             gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
         else:
             gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","NO")
+            gen_xml.change_node_subnode_string(cur_xml_name,"inputs","upd","")
         gen_xml.change_node_subnode_string(cur_xml_name,"ionogrid","wgt_mode",aug_mode)
         # Change input obs
         gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),[cur_site])
