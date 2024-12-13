@@ -579,7 +579,7 @@ def check_input(xmlfile = "great2.1.xml"):
         cur_file_value = cur_file_all.split("\n")
         for i in range(len(lack_file[cur_lack_input])):
             logging.error("{} DOES NOT EXIST !!!".format(lack_file[cur_lack_input][i]))
-        if cur_lack_input == "rinexo": 
+        if cur_lack_input == "rinexo" or cur_lack_input == "aug": 
             if len(lack_file[cur_lack_input]) == len(cur_file_value) - 2:
                 available_process = False
         else:
