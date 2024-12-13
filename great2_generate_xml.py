@@ -561,7 +561,7 @@ def check_input(xmlfile = "great2.1.xml"):
         if cur_input_xml == None:
             continue
         cur_file_all = cur_input_xml.text
-        if "\\" not in cur_file_all:
+        if "/" not in cur_file_all:
             continue
         cur_file_value = cur_file_all.split("\n")
         if len(cur_file_value) == 1:
