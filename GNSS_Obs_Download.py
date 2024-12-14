@@ -39,24 +39,25 @@ count = sys.argv[3]
 data_centre = sys.argv[4].upper()
 site_list = sys.argv[5].split("_")
 #UPD_EPN
-# site_list = "TRO1  VARS  HETT  OVE6  ROM2  OST6\
-#   OLK2  PYHA  LEK6  METG  LOV6  IRBE\
-#   NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
-#   LAMA  HELG  GELL  LDB2  GOML  GOET\
-#   BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
-#   SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
-#   POLV  COMO  EGLT  SWAS  MARS  ZADA\
-#   AJAC  SCOA  ACOR  ALME  MMET  ORID\
-#   IZMI  NICO  SAVU  SUN6  MNSK  TER2\
-#   SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
-#   LODZ  ZYWI  AUTN  ENTZ  VILL"
+site_list = "TRO1  VARS  HETT  OVE6  ROM2  OST6\
+  OLK2  PYHA  LEK6  METG  LOV6  IRBE\
+  NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
+  LAMA  HELG  GELL  LDB2  GOML  GOET\
+  BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
+  SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
+  POLV  COMO  EGLT  SWAS  MARS  ZADA\
+  AJAC  SCOA  ACOR  ALME  MMET  ORID\
+  IZMI  NICO  SAVU  SUN6  MNSK  TER2\
+  SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
+  LODZ  ZYWI  AUTN  ENTZ  VILL"
+site_list = site_list + " TERS IJMU KOS1 WSRT DIEP BRUX WARE EIJS TIT2 EUSK DOUR REDU DILL KARL BADH FFMJ KLOP"
 #AUG_GER
 # site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
 #AUG_EPN1
-site_list = ["PTBB","REDU","KOS1","WSRT","BRUX","TIT2"]
+# site_list = ["PTBB","REDU","KOS1","WSRT","BRUX","TIT2"]
 #EPNBIG
-site_list = ["KLOP","BYDG","BUDD","CFRM","BSCN","VIRG","GRAC","VTRB","BSVZ","DUB2","WROC","POZE","UNPG","ENTZ","SAS2","WARE","CLIB","LINZ","PTBB","BUDP","DVCN","TUBO","TERS","MOPI","GARI","TRMI","ISRN","MOP2","BAUT","AXPV","UBEN","DIEP","HOBU","PZA2","AUTN","MSEL","RANT","TRF2","WARN","CAKO","WRLG","KDA2","GOET","LCRA","EUSK","GELL","ZADA","IENG","BOLG","EIJS","SRJV","REDZ","MEDI","AQUI","VEN1","ZIM2","ENZA","HELG","GSR1","RIVO","KARL","KOS1"]
-# site_list = site_list.split()
+# site_list = ["KLOP","BYDG","BUDD","CFRM","BSCN","VIRG","GRAC","VTRB","BSVZ","DUB2","WROC","POZE","UNPG","ENTZ","SAS2","WARE","CLIB","LINZ","PTBB","BUDP","DVCN","TUBO","TERS","MOPI","GARI","TRMI","ISRN","MOP2","BAUT","AXPV","UBEN","DIEP","HOBU","PZA2","AUTN","MSEL","RANT","TRF2","WARN","CAKO","WRLG","KDA2","GOET","LCRA","EUSK","GELL","ZADA","IENG","BOLG","EIJS","SRJV","REDZ","MEDI","AQUI","VEN1","ZIM2","ENZA","HELG","GSR1","RIVO","KARL","KOS1"]
+site_list = site_list.split()
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 
 #Find the short site name and long site name
