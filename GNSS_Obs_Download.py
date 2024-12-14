@@ -22,7 +22,7 @@ if (cur_platform == "Darwin"):
     data_save = "/Users/hanjunjie/Master_3/Data"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
-    data_save = "/cache/hanjunjie/Data"
+    data_save = "/data02/hanjunjie/Data_ZWD"
 import download_data_product as dl
 CDDIS = "https://cddis.nasa.gov/archive"
 WHU = "ftp://igs.gnsswhu.cn/pub"
