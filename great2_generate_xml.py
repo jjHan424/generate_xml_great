@@ -551,7 +551,7 @@ def set_receiver_parameter(xmlfile = "great2.1.xml",site_list = [""],site_xyz = 
 
 # Check Input Data
 def check_input(xmlfile = "great2.1.xml"):
-    input_list = ["upd","rinexo","rinexn","rinexc","sp3","atx","blq","de","eop","leadsecond","aug","DE","poleut1"]
+    input_list = ["upd","rinexo","rinexn","rinexc","sp3","atx","blq","de","eop","leadsecond","aug","DE","poleut1","aug_grid"]
     tree = et.parse(xmlfile)
     inputs = tree.getroot().find("inputs")
     lack_file = {}
