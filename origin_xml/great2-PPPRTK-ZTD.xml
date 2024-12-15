@@ -63,6 +63,7 @@
 	<tropo> TRUE </tropo>
 	<iono> TRUE </iono>
 	<gradient> FALSE </gradient>
+	<grad_mf> CHEN_HERRING </grad_mf> 
 	<tropo_model> saastamoinen </tropo_model>
 	<tropo_mf> gmf </tropo_mf>
 	<sig_init_crd> 100 </sig_init_crd>
