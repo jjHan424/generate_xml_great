@@ -19,7 +19,7 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    data_save = "/Users/hanjunjie/Master_3/Data"
+    data_save = "/Users/hanjunjie/Gap1/Data"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
     data_save = "/data02/hanjunjie/Data_ZWD"
@@ -36,32 +36,17 @@ logging.basicConfig(level=logging.DEBUG,filename=log_path,filemode="w",format=fm
 year = sys.argv[1]
 doy = sys.argv[2]
 count = sys.argv[3]
-data_centre = sys.argv[4].upper()
-site_list = sys.argv[5].split("_")
-#UPD_EPN
-site_list = "TRO1  VARS  HETT  OVE6  ROM2  OST6\
- OLK2  PYHA  LEK6  METG  LOV6  IRBE\
- NOR7  SPT7  VAIN  HAS6  RANT  REDZ\
- LAMA  HELG  GELL  LDB2  GOML  GOET\
- BRTS  LEIJ  WARE  INVR  ARIS  TLL1\
- SNEO  WTZZ  AUBG  BUTE  BACA  MIKL\
- POLV  COMO  EGLT  SWAS  MARS  ZADA\
- AJAC  SCOA  ACOR  ALME  MMET  ORID\
- IZMI  NICO  SAVU  SUN6  MNSK  TER2\
- SMLA  IJMU  DYNG  DEVA  MALL  MAH1\
- LODZ  ZYWI  AUTN  ENTZ  VILL"
-site_list = site_list + " TERS IJMU KOS1 WSRT DIEP BRUX WARE EIJS TIT2 EUSK DOUR REDU DILL KARL BADH FFMJ KLOP"
-#AUG_GER
-# site_list = ["TERS","IJMU","DENT","WSRT","KOS1","BRUX","DOUR","WARE","REDU","EIJS","TIT2","EUSK","DILL","DIEP","BADH","KLOP","FFMJ","KARL","HOBU","PTBB","GOET"]
-#AUG_EPN1
-# site_list = ["PTBB","REDU","KOS1","WSRT","BRUX","TIT2"]
-#EPNBIG
-# site_list = ["KLOP","BYDG","BUDD","CFRM","BSCN","VIRG","GRAC","VTRB","BSVZ","DUB2","WROC","POZE","UNPG","ENTZ","SAS2","WARE","CLIB","LINZ","PTBB","BUDP","DVCN","TUBO","TERS","MOPI","GARI","TRMI","ISRN","MOP2","BAUT","AXPV","UBEN","DIEP","HOBU","PZA2","AUTN","MSEL","RANT","TRF2","WARN","CAKO","WRLG","KDA2","GOET","LCRA","EUSK","GELL","ZADA","IENG","BOLG","EIJS","SRJV","REDZ","MEDI","AQUI","VEN1","ZIM2","ENZA","HELG","GSR1","RIVO","KARL","KOS1"]
-site_list = site_list.split()
+site_list = sys.argv[4].split("_")
+if len(sys.argv) > 5:
+    data_centre = sys.argv[5].upper()
+else:
+    data_centre = "J.J.Han"
+
+
 count_int,doy_int,year_int = int(count),int(doy),int(year)
 
 #Find the short site name and long site name
-file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+file = open('./sys_file/LongName_BLH_XYZ.csv','r',encoding='utf8')
 site_list_csv = csv.DictReader(file)
 site_dict_short_long = {}
 for cur_dic in site_list_csv:
@@ -76,16 +61,26 @@ for cur_site_short in site_list:
 
 thread_process = []
 while count_int > 0:
-    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_EPN","{:0>3}".format(doy_int))
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy_int))
     LH.mkdir(save_dir)
     for cur_site_short in site_list:
         logging.info("START Obs Site = {}-{}, Year ={:0>4} , Doy = {:0>3}".format(cur_site_short,site_dict_short_long[cur_site_short],year_int,doy_int))
+        
         if data_centre == "EPN":
             dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
         elif data_centre == "HK":
             dl.download_obs_file_HK(data_save,HK,year_int,doy_int,cur_site_short)
+        elif data_centre == "CDDIS":
+            dl.download_obs_file_CDDIS(data_save,CDDIS,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
         else:
-            logging.error("{} is not support".format(data_centre))
+            logging.warning("{} is not support".format(data_centre))
+            is_download = dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
+            if not is_download:
+                dl.download_obs_file_CDDIS(data_save,CDDIS,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])
+            if not is_download:
+                is_download = dl.download_obs_file_HK(data_save,HK,year_int,doy_int,cur_site_short)
+            if not is_download:
+                logging.error("{} FAIL!!! ALL!!!".format(cur_site_short))
     doy_int = doy_int + 1
     count_int = count_int - 1
 

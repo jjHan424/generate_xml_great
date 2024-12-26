@@ -13,7 +13,7 @@ fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
     XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
-    work_dir = r"/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Project"
+    work_dir = r"/Users/hanjunjie/Gap1/ZWD_Retrieval_PPPRTK/Project"
 else:
     sys.path.insert(0,"/data02/hanjunjie/Software/Tools/generate_xml_great")
     XML_origin_path = r"/data02/hanjunjie/Software/Tools/generate_xml_great/origin_xml/great2-PPPRTK-ZTD.xml"
@@ -62,11 +62,11 @@ else:
 
 # SET PATH
 if (cur_platform == "Darwin"):
-    upd_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/UPD".format(year)
-    obs_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/OBS".format(year)
-    nav_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/NAV".format(year)
-    sp3_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/SP3".format(year)
-    clk_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/{:0>4}/CLK".format(year)
+    upd_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/UPD".format(year)
+    obs_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/CLK".format(year)
     aug_path = "/Users/hanjunjie/Gap1/IONO_Accuracy_Predict/Data/AUG"
     grid_path = "/cache/hanjunjie/Project/C-ZTD/Aug2Grid"
 else:
