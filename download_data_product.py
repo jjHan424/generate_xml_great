@@ -166,7 +166,8 @@ def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
         save_dir = data_save
     LH.mkdir(save_dir)
     yy = year-2000
-    file_name = "{}{:0>3}0.{:2d}n".format(cur_nav.lower(),doy,yy)
+    # file_name = "{}{:0>3}0.{:2d}n".format(cur_nav.lower(),doy,yy)
+    file_name = "BRDM00DLR_S_{:0>4}{:0>3}0000_01D_MN.rnx".format(year,doy)
     if (not os.path.exists(os.path.join(save_dir,file_name))):
         y_temp,mon,date = doy2ymd((year),(doy))
         weekd = ymd2gpsweekday(int(year),mon,date)
@@ -177,6 +178,41 @@ def download_nav_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
         download_bool = False
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             gzip(save_dir,file_name_gz,file_name)
+        
+        #Short name
+        if (not download_bool):
+            file_name_gz = "brdm{:0>3}0.{:0>2}p.Z".format(doy,yy)
+            source_file = source_raw + "/gnss/mgex/daily/rinex3/{:0>4}/{:0>3}/{:0>2}p".format(year,doy,yy)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            logging.warning("NAV for {} at {:0>4}-{:0>3} download with long name FAIL".format(cur_nav,year,doy))
+        
+        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            logging.error("NAV for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_nav,year,doy))
+        else:
+            logging.info("NAV for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
+
+def download_nav_file_CDDIS(data_save = "",source_raw = "",year = 2021,doy = 310,cur_nav = "brdm",download_cur_file = False):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"NAV")
+    if download_cur_file:
+        save_dir = data_save
+    LH.mkdir(save_dir)
+    yy = year-2000
+    # file_name = "{}{:0>3}0.{:2d}n".format(cur_nav.lower(),doy,yy)
+    file_name = "BRDC00IGS_S_{:0>4}{:0>3}0000_01D_MN.rnx".format(year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name))):
+        y_temp,mon,date = doy2ymd((year),(doy))
+        weekd = ymd2gpsweekday(int(year),mon,date)
+        week = int(weekd/10)
+        # Different time different name and location just for WHU igs long name
+        file_name_gz = "BRDC00IGS_R_{:0>4}{:0>3}0000_01D_MN.rnx.gz".format(year,doy)
+        source_file = source_raw + "/gnss/data/daily/{:0>4}/brdc".format(year)
+        download_bool = False
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name)
+            download_bool = True
         
         #Short name
         if (not download_bool):
@@ -502,11 +538,15 @@ def download_sp3_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
     y_temp,mon,date = doy2ymd((year),(doy))
     weekd = ymd2gpsweekday(int(year),mon,date)
     week = int(weekd/10)
-    file_name = "{}{:0>5}.sp3".format(cur_analysis.lower(),weekd)
-    if (not os.path.exists(os.path.join(save_dir,file_name))):
+    file_name_2 = "{}{:0>5}.sp3".format(cur_analysis.lower(),weekd)
+    file_name_3 = "{}0MGX{}_{:0>4}{:0>3}0000_01D_05M_ORB.SP3".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_2)) and not os.path.exists(os.path.join(save_dir,file_name_3))):
         if week >= 1962:
             file_name_gz = "{}0MGX{}_{:0>4}{:0>3}0000_01D_05M_ORB.SP3.gz".format(cur_analysis.upper(),cur_type.upper(),year,doy)
-            source_file = source_raw + "/gps/products/{:0>4}".format(week)
+            if "cddis" in source_raw:
+                source_file = source_raw + "/gnss/products/{:0>4}".format(week)
+            elif "gnsswhu" in source_raw:
+                source_file = source_raw + "/gps/products/{:0>4}".format(week)
         else:
             if cur_analysis.lower() == "cod":
                 cur_analysis_short = "com"
@@ -516,21 +556,21 @@ def download_sp3_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
             source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
         download_bool = False
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name)
+            gzip(save_dir,file_name_gz,file_name_3)
             download_bool = True
         #Download from mgex
         if (not download_bool):
             source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name)
+            gzip(save_dir,file_name_gz,file_name_3)
             download_bool = True
 
-        if (not os.path.exists(os.path.join(save_dir,file_name))):
+        if (not os.path.exists(os.path.join(save_dir,file_name_3))):
             logging.error("SP3 for {} at {:0>4}-{:0>3} from {} download FAIL!!!".format(file_name_gz,year,doy,source_file))
         else:
             logging.info("SP3 for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
     else:
-        logging.warn("This File {} exits!!!".format(file_name))
+        logging.warn("This File {} exits!!!".format(file_name_3))
 
 # Download CLK
 def download_clk_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,cur_analysis = "gfz",cur_type = "FIN"):
@@ -540,11 +580,15 @@ def download_clk_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
     y_temp,mon,date = doy2ymd((year),(doy))
     weekd = ymd2gpsweekday(int(year),mon,date)
     week = int(weekd/10)
-    file_name = "{}{:0>5}.clk".format(cur_analysis.lower(),weekd)
-    if (not os.path.exists(os.path.join(save_dir,file_name))):
+    file_name_2 = "{}{:0>5}.clk".format(cur_analysis.lower(),weekd)
+    file_name_3 = "{}0MGX{}_{:0>4}{:0>3}0000_01D_30S_CLK.CLK".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_2)) and not os.path.exists(os.path.join(save_dir,file_name_3))):
         if week >= 1962:
             file_name_gz = "{}0MGX{}_{:0>4}{:0>3}0000_01D_30S_CLK.CLK.gz".format(cur_analysis.upper(),cur_type.upper(),year,doy)
-            source_file = source_raw + "/gps/products/{:0>4}".format(week)
+            if "cddis" in source_raw:
+                source_file = source_raw + "/gnss/products/{:0>4}".format(week)
+            elif "gnsswhu" in source_raw:
+                source_file = source_raw + "/gps/products/{:0>4}".format(week)
         else:
             if cur_analysis.lower() == "cod":
                 cur_analysis_short = "com"
@@ -554,18 +598,18 @@ def download_clk_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
             source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
         download_bool = False
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name)
+            gzip(save_dir,file_name_gz,file_name_3)
             download_bool = True
         #Download from mgex
         if (not download_bool):
             source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name)
+            gzip(save_dir,file_name_gz,file_name_3)
             download_bool = True
 
-        if (not os.path.exists(os.path.join(save_dir,file_name))):
+        if (not os.path.exists(os.path.join(save_dir,file_name_3))):
             logging.error("CLK for {} at {:0>4}-{:0>3} from {} download FAIL!!!".format(file_name_gz,year,doy,source_file))
         else:
             logging.info("CLK for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
     else:
-        logging.warn("This File {} exits!!!".format(file_name))
+        logging.warn("This File {} exits!!!".format(file_name_3))

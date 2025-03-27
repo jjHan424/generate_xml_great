@@ -59,13 +59,15 @@ while count_int > 0:
         for cur_site in site_list:
             logging.info("START ZTD Site = {}, Year ={:0>4} , Doy = {:0>3}".format(cur_site,year_int,doy_int))
             dl.download_zpd_file(data_save,CDDIS,year_int,doy_int,cur_site,site_dict_short_long[cur_site])
-    logging.info("START NAV Year ={:0>4} , Doy = {:0>3}".format(year_int,doy_int))
+    logging.info("START Year ={:0>4} , Doy = {:0>3}".format(year_int,doy_int))
 
     #NAV
     if "NAV" in download_mode:
         logging.info("BEGIN NAV Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
             dl.download_nav_file_WHU(data_save,WHU,year_int,doy_int,"BRDM")
+        if "CDDIS" in data_centre:
+            dl.download_nav_file_CDDIS(data_save,CDDIS,year_int,doy_int,"BRDM")
         else:
             logging.error("{} is not support".format(data_centre))
     #SP3
@@ -73,6 +75,8 @@ while count_int > 0:
         logging.info("BEGIN SP3 Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
             dl.download_sp3_file_WHU(data_save,WHU,year_int,doy_int,"GFZ","RAP")
+        if "CDDIS" in data_centre:
+            dl.download_sp3_file_WHU(data_save,CDDIS,year_int,doy_int,"GFZ","RAP")
         else:
             logging.error("{} is not support".format(data_centre))
     #CLK
@@ -80,6 +84,8 @@ while count_int > 0:
         logging.info("BEGIN CLK Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
             dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,"GFZ","RAP")
+        if "CDDIS" in data_centre:
+            dl.download_clk_file_WHU(data_save,CDDIS,year_int,doy_int,"GFZ","RAP")
         else:
             logging.error("{} is not support".format(data_centre))
     doy_int = doy_int + 1
