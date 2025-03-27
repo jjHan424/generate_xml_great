@@ -19,7 +19,7 @@ if (cur_platform == "Darwin"):
     data_save = "/Users/hanjunjie/Gap1/Data"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
-    data_save = "/data02/hanjunjie/Data"
+    data_save = "/D6/junjie/Data"
 import download_data_product as dl
 CDDIS = "https://cddis.nasa.gov/archive"
 WHU = "ftp://igs.gnsswhu.cn/pub"
@@ -37,7 +37,7 @@ data_centre = sys.argv[5]
 if "ZTD" in download_mode or "OBS" in download_mode:
     site_list = sys.argv[6].split("_")
     #Find the short site name and long site name
-    file = open('./sys_file/EUREF_Permanent_GNSS_Network.csv','r',encoding='utf8')
+    file = open('./sys_file/LongName_BLH_XYZ.csv','r',encoding='utf8')
     site_list_csv = csv.DictReader(file)
     site_dict_short_long = {}
     for cur_dic in site_list_csv:

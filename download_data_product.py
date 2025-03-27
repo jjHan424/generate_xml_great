@@ -135,7 +135,8 @@ def download_zpd_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_s
     save_dir = os.path.join(data_save,"{:0>4}".format(year),"ZTD","{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
-    file_name = "{}{:0>3}0.{:2d}zpd".format(cur_site.lower(),doy,yy)
+    # file_name = "{}{:0>3}0.{:2d}zpd".format(cur_site.lower(),doy,yy)
+    file_name = "IGS0OPSFIN_{:0>4}{:0>3}0000_01D_05M_{}_TRO.TRO".format(year,doy,cur_site_long)
     if (not os.path.exists(os.path.join(save_dir,file_name))):
         y_temp,mon,date = doy2ymd((year),(doy))
         weekd = ymd2gpsweekday(int(year),mon,date)
@@ -285,6 +286,7 @@ def download_obs_file_CDDIS(data_save = "",source_raw = "",year = 2021,doy = 310
         download_rnx2 = False
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
             if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Receiver".format(cur_site,year,doy))
                 download_bool = True
         #RINEX3 first From Receiver data GO
         if (not download_bool):
