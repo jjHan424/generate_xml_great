@@ -13,8 +13,8 @@ cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
-    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great1-RTUPD.xml"
-    work_dir = r"/Users/hanjunjie/Master_3/1-IUGG/UPD_GFZ_CHN_BDS2"
+    XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great1-ROTI.xml"
+    work_dir = r"/Users/hanjunjie/Gap1/Magnetic_storm/Project"
 else:
     sys.path.insert(0,"/data02/hanjunjie/Software/Tools/generate_xml_great_ROTI")
     XML_origin_path = r"/data02/hanjunjie/Software/Tools/generate_xml_great_ROTI/origin_xml/great1-ROTI.xml"
@@ -53,10 +53,10 @@ site_list = site_list_temp.split("_")
 # SET PATH
 if (cur_platform == "Darwin"):
     upd_path = "/cache/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
-    obs_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/OBS".format(year)
-    nav_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/NAV".format(year)
-    sp3_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/SP3".format(year)
-    clk_path = "/Users/hanjunjie/Master_3/Data/{:0>4}/CLK".format(year)
+    obs_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/OBS".format(year)
+    nav_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/NAV".format(year)
+    sp3_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/SP3".format(year)
+    clk_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/CLK".format(year)
 else:
     upd_path = "/data02/hanjunjie/Project/B-IUGG/UPD_Europe_RAW_ALL_30S/UPD_WithoutDCB"
     obs_path = "/data02/hanjunjie/Data_ZWD/{:0>4}/OBS".format(year)

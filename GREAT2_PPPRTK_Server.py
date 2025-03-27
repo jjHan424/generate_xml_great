@@ -12,7 +12,7 @@ import csv
 cur_platform = platform.system()
 fmt = "%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s"
 if (cur_platform == "Darwin"):
-    work_dir = r"/Users/hanjunjie/Gap1/ZWD_Retrieval_PPPRTK/Project"
+    work_dir = r"/Users/hanjunjie/Gap1/Magnetic_storm/Project"
     sys.path.insert(0,"/Users/hanjunjie/tools/generate_xml_great")
     XML_origin_path = r"/Users/hanjunjie/tools/generate_xml_great/origin_xml/great2-AUG-ZTD.xml"
 else:
@@ -70,7 +70,7 @@ else:
 # SET PATH
 if (cur_platform == "Darwin"):
     upd_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/UPD".format(year)
-    obs_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/OBS".format(year)
+    obs_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/OBS_IGS".format(year)
     nav_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/NAV".format(year)
     sp3_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/SP3".format(year)
     clk_path = "/Users/hanjunjie/Gap1/Data/{:0>4}/CLK".format(year)
@@ -119,6 +119,7 @@ while count_int > 0:
         gen_xml.change_inputs_upd(cur_xml_name,upd_path,year_int,doy_int,int(hour),int(s_length))
     else:
         gen_xml.change_node_subnode_string(cur_xml_name,"ambiguity","fix_mode","NO")
+        gen_xml.change_node_subnode_string(cur_xml_name,"inputs","upd"," ")
     # Change input obs
     gen_xml.change_inputs_obs(cur_xml_name,obs_path,year_int,doy_int,int(hour),int(s_length),site_list)
     # Change input nav

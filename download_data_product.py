@@ -21,8 +21,8 @@ if (cur_platform == "Darwin"):
     GFZRNX = "/Users/hanjunjie/tools/gfzrnx"
 else:
     sys.path.insert(0,"/cache/hanjunjie/Software/Tools/generate_xml_great")
-    CRX2RNX = "/data02/hanjunjie/Software/Tools/crx2rnx_2022"
-    GFZRNX = "/data02/hanjunjie/Software/Tools/gfzrnx_2.1.9_lx64"
+    CRX2RNX = "/D6/junjie/Tools/GNSS/crx2rnx_2022"
+    GFZRNX = "/D6/junjie/Tools/GNSS/gfzrnx_2.1.9_lx64"
 import PodBatch_win as Pod
 from PodItera_Batch import doy2ymd
 from PodItera_Batch import ymd2gpsweek
@@ -56,12 +56,13 @@ def gzip(local,file_name_gz,file_name):
         result = subprocess.getstatusoutput(cmd)
         file_name_gz_value = file_name_gz.split(".")
         file_name_gz_after_gz = file_name_gz_value[0]+"." + file_name_gz_value[1]
+        if (os.path.exists(file_name_gz)):
+            os.remove(file_name_gz)
         if (not os.path.exists(file_name_gz_after_gz)):
             return False
         if (os.path.exists(file_name_gz_after_gz) and file_name != file_name_gz_after_gz):
             os.rename(file_name_gz_after_gz,file_name)
-        if (os.path.exists(file_name_gz)):
-            os.remove(file_name_gz)
+        return True
     except OSError:
         logging.error("gzip failed for throw except!!!")
         sys.exit()
@@ -80,9 +81,11 @@ def crx2rnx(local,file_name_d,file_name):
     cmd = "{} {}".format(CRX2RNX,file_name_d)
     cmd_rnxversion = "{} -finp {} -fout {}_rx3 ::RX3::".format(GFZRNX,file_name,file_name)
     mv_rnx = "mv {}_rx3 {}".format(file_name,file_name)
+    cmd_mv_rnx2_rnx3 = "mv {}o {}".format(file_name_d[:-1],file_name)
     cmd_antenna = "sed -i 's/.*ANTENNA: DELTA H\/E\/N/        0.0000        0.0000        0.0000                  ANTENNA: DELTA H\/E\/N/1' {}".format(file_name)
     try:
         result = subprocess.getstatusoutput(cmd)
+        result = subprocess.getstatusoutput(cmd_mv_rnx2_rnx3)
         with open(file_name,'r') as f:
             for line in f:
                 if "RINEX VERSION / TYPE" in line:
@@ -93,13 +96,27 @@ def crx2rnx(local,file_name_d,file_name):
                         result = subprocess.getstatusoutput(cmd_rnxversion)
                         result = subprocess.getstatusoutput(mv_rnx)
                     break
-        result = subprocess.getstatusoutput(cmd_antenna)
+        # result = subprocess.getstatusoutput(cmd_antenna)
         if (os.path.exists(file_name_d)):
             os.remove(file_name_d)
     except OSError:
         logging.error("crx2rnx failed for throw except!!!")
         sys.exit()
 
+def combinernx(local,file_name_all,file_list):
+    os.chdir(local)
+    file_inp = ""
+    for cur_file in file_list:
+        file_inp = file_inp + cur_file + " "
+    cmd = "{} -finp {} -kv > {}".format(GFZRNX,file_inp[0:-1],file_name_all)
+    try:
+        result = subprocess.getstatusoutput(cmd)
+        for cur_file in file_list:
+            cmd_rm = "rm -rf {}".format(cur_file)
+            result = subprocess.getstatusoutput(cmd_rm)
+    except OSError:
+        logging.error("combinernx failed for throw except!!!")
+        sys.exit()
 def crx2rnx_WFY(local,file_name_d,file_name):
     os.chdir(local)
     cmd = "{} {}".format(CRX2RNX,file_name_d)
@@ -253,9 +270,10 @@ def download_obs_file_CDDIS(data_save = "",source_raw = "",year = 2021,doy = 310
     save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
-    file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
+    file_name_rnx2 = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
     file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
-    if (not os.path.exists(os.path.join(save_dir,file_name))):
+    file_name_rnx3 = "{}_R_{:0>4}{:0>3}0000_01D_30S_MO.rnx".format(cur_site_long,year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_rnx2)) and not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
         y_temp,mon,date = doy2ymd((year),(doy))
         weekd = ymd2gpsweekday(int(year),mon,date)
         week = int(weekd/10)
@@ -264,66 +282,71 @@ def download_obs_file_CDDIS(data_save = "",source_raw = "",year = 2021,doy = 310
         file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
         source_file = source_raw + "/gnss/data/daily/{:0>4}/{:0>3}/{:0>2}d".format(year,doy,year-2000)
         download_bool = False
+        download_rnx2 = False
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                download_bool = True
         #RINEX3 first From Receiver data GO
         if (not download_bool):
             file_name_gz = "{}_R_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs".format(cur_site,year,doy))
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs".format(cur_site,year,doy))
+                download_bool = True
         #RINEX3 first From Receiver data Stream
         if (not download_bool):
             file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Stream".format(cur_site,year,doy))
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Stream".format(cur_site,year,doy))
+                download_bool = True
         #RINEX3 first From Receiver data GO from Stream
         if (not download_bool):
             file_name_gz = "{}_S_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Stream".format(cur_site,year,doy))
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Stream".format(cur_site,year,doy))
+                download_bool = True
         #RINEX3 first From Receiver data Unknown
         if (not download_bool):
             file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_MO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Unknown".format(cur_site,year,doy))
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name Mixed obs with Unknown".format(cur_site,year,doy))
+                download_bool = True
         #RINEX3 first From Receiver data GO from Unknown
         if (not download_bool):
             file_name_gz = "{}_U_{:0>4}{:0>3}0000_01D_30S_GO.crx.gz".format(cur_site_long,year,doy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Unknown".format(cur_site,year,doy))
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with long name GPS obs with Unknown".format(cur_site,year,doy))
+                download_bool = True
         #RINEX2
         if (not download_bool):
             file_name_gz = "{}{:0>3}0.{:2d}d.gz".format(cur_site.lower(),doy,yy)
         if (not download_bool and download(source_file,file_name_gz,save_dir)):
-            gzip(save_dir,file_name_gz,file_name_d)
-            logging.warning("OBS for {} at {:0>4}-{:0>3} download with short name with rinex2".format(cur_site,year,doy))
-            download_bool = True
+            if gzip(save_dir,file_name_gz,file_name_d):
+                logging.warning("OBS for {} at {:0>4}-{:0>3} download with short name with rinex2".format(cur_site,year,doy))
+                download_bool = True
+                download_rnx2 = True
         if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
-            crx2rnx(save_dir,file_name_d,file_name)
-        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            if download_rnx2:
+                crx2rnx(save_dir,file_name_d,file_name_rnx2)
+            else:
+                crx2rnx(save_dir,file_name_d,file_name_rnx3)
+        if (not os.path.exists(os.path.join(save_dir,file_name_rnx2)) and not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
             return False
         else:
             logging.info("Obs for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
             return True
     else:
-        logging.warn("This File {} exits!!!".format(file_name))
+        logging.warn("This site {} exits!!!".format(cur_site_long))
         return True
 
 # Download Obs File from HongKong with one site
 def download_obs_file_HK(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",sample = 30):
-    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy))
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_HK_{:0>2}S".format(sample),"{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
     file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
@@ -348,6 +371,52 @@ def download_obs_file_HK(data_save = "",source_raw = "",year = 2021,doy = 310,cu
             return False
         else:
             logging.info("Obs for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+            return True
+    else:
+        logging.warn("This File {} exits!!!".format(file_name))
+        return True
+
+def download_obs_file_HK_5S(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",sample = 30,start_hour = 0,end_hour = 24):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_HK_{:0>2}S".format(sample),"{:0>3}".format(doy))
+    LH.mkdir(save_dir)
+    yy = year-2000
+    file_name_all = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
+    file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_all))):
+        file_list = []
+        for cur_hour in range (start_hour,end_hour):
+            file_name_d = "{}{:0>3}{:0>2}.{:2d}d".format(cur_site.upper(),doy,cur_hour,yy)
+            file_name = "{}{:0>3}{:0>2}.{:2d}o".format(cur_site.upper(),doy,cur_hour,yy)
+            site_name_lower = cur_site.lower()
+            if (not os.path.exists(os.path.join(save_dir,file_name))):
+                y_temp,mon,date = doy2ymd((year),(doy))
+                weekd = ymd2gpsweekday(int(year),mon,date)
+                week = int(weekd/10)
+                # Different time different version of rinex
+                #RINEX3 first From Receiver data MO
+                file_name_gz = "{}00HKG_R_{:0>4}{:0>3}{:0>2}00_01H_{:0>2}S_MO.crx.gz".format(cur_site.upper(),year,doy,cur_hour,sample)
+                source_file = source_raw + "/{:0>4}/{:0>3}/{}/{}s".format(year,doy,site_name_lower,sample)
+                
+                download_bool = False
+                if (not download_bool and download(source_file,file_name_gz,save_dir)):
+                    gzip(save_dir,file_name_gz,file_name_d)
+                    download_bool = True
+                if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
+                    crx2rnx(save_dir,file_name_d,file_name)
+                if (not os.path.exists(os.path.join(save_dir,file_name))):
+                    logging.error("obs for {} at {:0>4}-{:0>3}-{:0>2} download fail".format(cur_site,year,doy,cur_hour))
+                else:
+                    file_list.append(file_name)
+                    logging.info("obs for {} at {:0>4}-{:0>3}-{:0>2} download success".format(file_name_gz,year,doy,cur_hour,source_file))
+            else:
+                file_list.append(file_name)
+                logging.warn("This File {} exits".format(file_name))
+        combinernx(save_dir,file_name_all,file_list)
+        if (not os.path.exists(os.path.join(save_dir,file_name_all))):
+            logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
+            return True
+        else:
+            logging.info("Obs for {} at {:0>4}-{:0>3} download from".format(file_name_all,year,doy))
             return True
     else:
         logging.warn("This File {} exits!!!".format(file_name))
