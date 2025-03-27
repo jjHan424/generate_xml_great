@@ -266,8 +266,8 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
         return True
 
 # Download Obs File from CDDIS with one site
-def download_obs_file_CDDIS(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX"):
-    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy))
+def download_obs_file_CDDIS(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX",save_dir = ""):
+    # save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS","{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
     file_name_rnx2 = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
