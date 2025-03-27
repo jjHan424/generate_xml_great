@@ -33,6 +33,9 @@ doy = sys.argv[2]
 count = sys.argv[3]
 download_mode = sys.argv[4].split("_")
 data_centre = sys.argv[5]
+if "SP3" in download_mode or "CLK" in download_mode:
+    analysis_name = sys.argv[6]
+    solution_type = sys.argv[7]
 
 if "ZTD" in download_mode or "OBS" in download_mode:
     site_list = sys.argv[6].split("_")
@@ -74,18 +77,18 @@ while count_int > 0:
     if "SP3" in download_mode:
         logging.info("BEGIN SP3 Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
-            dl.download_sp3_file_WHU(data_save,WHU,year_int,doy_int,"GFZ","RAP")
+            dl.download_sp3_file_WHU(data_save,WHU,year_int,doy_int,analysis_name,solution_type)
         if "CDDIS" in data_centre:
-            dl.download_sp3_file_WHU(data_save,CDDIS,year_int,doy_int,"GFZ","RAP")
+            dl.download_sp3_file_WHU(data_save,CDDIS,year_int,doy_int,analysis_name,solution_type)
         else:
             logging.error("{} is not support".format(data_centre))
     #CLK
     if "CLK" in download_mode:
         logging.info("BEGIN CLK Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
         if "WHU" in data_centre:
-            dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,"GFZ","RAP")
+            dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,analysis_name,solution_type)
         if "CDDIS" in data_centre:
-            dl.download_clk_file_WHU(data_save,CDDIS,year_int,doy_int,"GFZ","RAP")
+            dl.download_clk_file_WHU(data_save,CDDIS,year_int,doy_int,analysis_name,solution_type)
         else:
             logging.error("{} is not support".format(data_centre))
     doy_int = doy_int + 1
