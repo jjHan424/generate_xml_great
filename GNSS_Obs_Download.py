@@ -98,7 +98,7 @@ while count_int > 0:
             if sample == 30:
                 dl.download_obs_file_RENAGFRA(data_save,RENAGFRA,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short],save_dir)
             elif sample == 1:
-                dl.download_obs_file_RENAGFRA_1S(data_save,RENAGFRA,year_int,doy_int,cur_site_short,sample,start_hour,end_hour)
+                dl.download_obs_file_RENAGFRA_1S(data_save,RENAGFRA,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short],sample,start_hour,end_hour)
         else:
             logging.warning("{} is not support".format(data_centre))
             is_download = dl.download_obs_file_EPN(data_save,EPN,year_int,doy_int,cur_site_short,site_dict_short_long[cur_site_short])

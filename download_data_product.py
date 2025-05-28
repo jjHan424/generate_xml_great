@@ -497,12 +497,13 @@ def download_obs_file_RENAGFRA(data_save = "",source_raw = "",year = 2021,doy = 
         logging.warn("This site {} exits!!!".format(cur_site_long))
         return True
 
-def download_obs_file_RENAGFRA_1S(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",sample = 30,start_hour = 0,end_hour = 24):
+def download_obs_file_RENAGFRA_1S(data_save = "",source_raw = "",year = 2021,doy = 310,cur_site = "XXXX",cur_site_long = "XXXX00XXX",sample = 30,start_hour = 0,end_hour = 24):
     save_dir = os.path.join(data_save,"{:0>4}".format(year),"OBS_{:0>2}S".format(sample),"{:0>3}".format(doy))
     LH.mkdir(save_dir)
     yy = year-2000
     file_name_all = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
     file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
+    file_name_rnx3 = "{}_S_{:0>4}{:0>3}0000_01D_30S_MO.rnx".format(cur_site_long,year,doy)
     if (not os.path.exists(os.path.join(save_dir,file_name_all))):
         file_list = []
         for cur_hour in range (start_hour,end_hour):
@@ -515,9 +516,8 @@ def download_obs_file_RENAGFRA_1S(data_save = "",source_raw = "",year = 2021,doy
                 week = int(weekd/10)
                 # Different time different version of rinex
                 #RINEX3 first From Receiver data MO
-                file_name_gz = "{}00HKG_R_{:0>4}{:0>3}{:0>2}00_01H_{:0>2}S_MO.crx.gz".format(cur_site.upper(),year,doy,cur_hour,sample)
-                source_file = source_raw + "/{:0>4}/{:0>3}/{}/{}s".format(year,doy,site_name_lower,sample)
-                
+                file_name_gz = "{}_S_{:0>4}{:0>3}{:0>2}00_01H_{:0>2}S_MO.crx.gz".format(cur_site_long,year,doy,cur_hour,sample)
+                source_file = source_raw + "/centipede_1s/{:0>4}/{:0>3}".format(year,doy)
                 download_bool = False
                 if (not download_bool and download(source_file,file_name_gz,save_dir)):
                     gzip(save_dir,file_name_gz,file_name_d)
@@ -532,7 +532,7 @@ def download_obs_file_RENAGFRA_1S(data_save = "",source_raw = "",year = 2021,doy
             else:
                 file_list.append(file_name)
                 logging.warn("This File {} exits".format(file_name))
-        combinernx(save_dir,file_name_all,file_list)
+        combinernx(save_dir,file_name_rnx3,file_list)
         if (not os.path.exists(os.path.join(save_dir,file_name_all))):
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
             return True
