@@ -236,7 +236,8 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
     yy = year-2000
     file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
     file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
-    if (not os.path.exists(os.path.join(save_dir,file_name))):
+    file_name_rnx3 = "{}_R_{:0>4}{:0>3}0000_01D_30S_MO.rnx".format(cur_site_long,year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_rnx3)) and not os.path.exists(os.path.join(save_dir,file_name))):
         y_temp,mon,date = doy2ymd((year),(doy))
         weekd = ymd2gpsweekday(int(year),mon,date)
         week = int(weekd/10)
@@ -291,8 +292,8 @@ def download_obs_file_EPN(data_save = "",source_raw = "",year = 2021,doy = 310,c
             logging.warning("OBS for {} at {:0>4}-{:0>3} download with short name with rinex2".format(cur_site,year,doy))
             download_bool = True
         if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
-            crx2rnx(save_dir,file_name_d,file_name)
-        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            crx2rnx(save_dir,file_name_d,file_name_rnx3)
+        if (not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
             return False
         else:
@@ -389,8 +390,9 @@ def download_obs_file_HK(data_save = "",source_raw = "",year = 2021,doy = 310,cu
     yy = year-2000
     file_name = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
     file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
+    file_name_rnx3 = "{}00HKG_R_{:0>4}{:0>3}0000_01D_30S_MO.rnx".format(cur_site.upper(),year,doy)
     site_name_lower = cur_site.lower()
-    if (not os.path.exists(os.path.join(save_dir,file_name))):
+    if (not os.path.exists(os.path.join(save_dir,file_name)) and not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
         y_temp,mon,date = doy2ymd((year),(doy))
         weekd = ymd2gpsweekday(int(year),mon,date)
         week = int(weekd/10)
@@ -403,8 +405,8 @@ def download_obs_file_HK(data_save = "",source_raw = "",year = 2021,doy = 310,cu
             gzip(save_dir,file_name_gz,file_name_d)
             download_bool = True
         if (download_bool and os.path.exists(os.path.join(save_dir,file_name_d))):
-            crx2rnx(save_dir,file_name_d,file_name)
-        if (not os.path.exists(os.path.join(save_dir,file_name))):
+            crx2rnx(save_dir,file_name_d,file_name_rnx3)
+        if (not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
             return False
         else:
@@ -420,7 +422,8 @@ def download_obs_file_HK_5S(data_save = "",source_raw = "",year = 2021,doy = 310
     yy = year-2000
     file_name_all = "{}{:0>3}0.{:2d}o".format(cur_site.upper(),doy,yy)
     file_name_d = "{}{:0>3}0.{:2d}d".format(cur_site.upper(),doy,yy)
-    if (not os.path.exists(os.path.join(save_dir,file_name_all))):
+    file_name_rnx3 = "{}00HKG_R_{:0>4}{:0>3}0000_01D_30S_MO.rnx".format(cur_site.upper(),year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_all)) and not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
         file_list = []
         for cur_hour in range (start_hour,end_hour):
             file_name_d = "{}{:0>3}{:0>2}.{:2d}d".format(cur_site.upper(),doy,cur_hour,yy)
@@ -449,12 +452,12 @@ def download_obs_file_HK_5S(data_save = "",source_raw = "",year = 2021,doy = 310
             else:
                 file_list.append(file_name)
                 logging.warn("This File {} exits".format(file_name))
-        combinernx(save_dir,file_name_all,file_list)
-        if (not os.path.exists(os.path.join(save_dir,file_name_all))):
+        combinernx(save_dir,file_name_rnx3,file_list)
+        if (not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
             return True
         else:
-            logging.info("Obs for {} at {:0>4}-{:0>3} download from".format(file_name_all,year,doy))
+            logging.info("Obs for {} at {:0>4}-{:0>3} download from".format(file_name_rnx3,year,doy))
             return True
     else:
         logging.warn("This File {} exits!!!".format(file_name))
@@ -533,11 +536,11 @@ def download_obs_file_RENAGFRA_1S(data_save = "",source_raw = "",year = 2021,doy
                 file_list.append(file_name)
                 logging.warn("This File {} exits".format(file_name))
         combinernx(save_dir,file_name_rnx3,file_list)
-        if (not os.path.exists(os.path.join(save_dir,file_name_all))):
+        if (not os.path.exists(os.path.join(save_dir,file_name_rnx3))):
             logging.error("Obs for {} at {:0>4}-{:0>3} download FAIL!!!".format(cur_site,year,doy))
             return True
         else:
-            logging.info("Obs for {} at {:0>4}-{:0>3} download from".format(file_name_all,year,doy))
+            logging.info("Obs for {} at {:0>4}-{:0>3} download from".format(file_name_rnx3,year,doy))
             return True
     else:
         logging.warn("This File {} exits!!!".format(file_name))
