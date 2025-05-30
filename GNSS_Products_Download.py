@@ -33,7 +33,7 @@ doy = sys.argv[2]
 count = sys.argv[3]
 download_mode = sys.argv[4].split("_")
 data_centre = sys.argv[5]
-if "SP3" in download_mode or "CLK" in download_mode or "BIA" in download_mode:
+if "SP3" in download_mode or "CLK" in download_mode or "DCB" in download_mode or "OSB" in download_mode:
     analysis_name = sys.argv[6]
     solution_type = sys.argv[7]
 
