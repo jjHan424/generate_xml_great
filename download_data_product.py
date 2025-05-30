@@ -699,3 +699,85 @@ def download_clk_file_WHU(data_save = "",source_raw = "",year = 2021,doy = 310,c
             logging.info("CLK for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
     else:
         logging.warn("This File {} exits!!!".format(file_name_3))
+
+# Download OSB
+def download_osb_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_analysis = "gfz",cur_type = "FIN"):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"OSB")
+    LH.mkdir(save_dir)
+    yy = year-2000
+    y_temp,mon,date = doy2ymd((year),(doy))
+    weekd = ymd2gpsweekday(int(year),mon,date)
+    week = int(weekd/10)
+    file_name_3 = "{}0MGX{}_{:0>4}{:0>3}0000_01D_01D_OSB.BIA".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_3))):
+        if week >= 1962:
+            file_name_gz = "{}0MGX{}_{:0>4}{:0>3}0000_01D_01D_OSB.BIA.gz".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+            if "cddis" in source_raw:
+                source_file = source_raw + "/gnss/products/{:0>4}".format(week)
+            elif "gnsswhu" in source_raw:
+                source_file = source_raw + "/gps/products/{:0>4}".format(week)
+        else:
+            if cur_analysis.lower() == "cod":
+                cur_analysis_short = "com"
+            elif cur_analysis.lower() == "gfz":
+                cur_analysis_short = "gbm"
+            file_name_gz = "{}{:0>5}.clk.Z".format(cur_analysis_short.lower(),weekd)
+            source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
+        download_bool = False
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name_3)
+            download_bool = True
+        #Download from mgex
+        if (not download_bool):
+            source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name_3)
+            download_bool = True
+
+        if (not os.path.exists(os.path.join(save_dir,file_name_3))):
+            logging.error("OSB for {} at {:0>4}-{:0>3} from {} download FAIL!!!".format(file_name_gz,year,doy,source_file))
+        else:
+            logging.info("OSB for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name_3))
+
+# Download DCB
+def download_dcb_file(data_save = "",source_raw = "",year = 2021,doy = 310,cur_analysis = "gfz",cur_type = "FIN"):
+    save_dir = os.path.join(data_save,"{:0>4}".format(year),"DCB")
+    LH.mkdir(save_dir)
+    yy = year-2000
+    y_temp,mon,date = doy2ymd((year),(doy))
+    weekd = ymd2gpsweekday(int(year),mon,date)
+    week = int(weekd/10)
+    file_name_3 = "{}0OPS{}_{:0>4}{:0>3}0000_01D_01D_DCB.BIA".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+    if (not os.path.exists(os.path.join(save_dir,file_name_3))):
+        if week >= 1962:
+            file_name_gz = "{}0OPS{}_{:0>4}{:0>3}0000_01D_01D_DCB.BIA.gz".format(cur_analysis.upper(),cur_type.upper(),year,doy)
+            if "cddis" in source_raw:
+                source_file = source_raw + "/gnss/products/bias/{:0>4}".format(year)
+            elif "gnsswhu" in source_raw:
+                source_file = source_raw + "/gps/products/bias/{:0>4}".format(week)
+        else:
+            if cur_analysis.lower() == "cod":
+                cur_analysis_short = "com"
+            elif cur_analysis.lower() == "gfz":
+                cur_analysis_short = "gbm"
+            file_name_gz = "{}{:0>5}.clk.Z".format(cur_analysis_short.lower(),weekd)
+            source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
+        download_bool = False
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name_3)
+            download_bool = True
+        #Download from mgex
+        if (not download_bool):
+            source_file = source_raw + "/gps/products/mgex/{:0>4}".format(week)
+        if (not download_bool and download(source_file,file_name_gz,save_dir)):
+            gzip(save_dir,file_name_gz,file_name_3)
+            download_bool = True
+
+        if (not os.path.exists(os.path.join(save_dir,file_name_3))):
+            logging.error("DCB for {} at {:0>4}-{:0>3} from {} download FAIL!!!".format(file_name_gz,year,doy,source_file))
+        else:
+            logging.info("DCB for {} at {:0>4}-{:0>3} download from {}".format(file_name_gz,year,doy,source_file))
+    else:
+        logging.warn("This File {} exits!!!".format(file_name_3))

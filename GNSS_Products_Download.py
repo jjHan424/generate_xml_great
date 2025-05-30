@@ -33,7 +33,7 @@ doy = sys.argv[2]
 count = sys.argv[3]
 download_mode = sys.argv[4].split("_")
 data_centre = sys.argv[5]
-if "SP3" in download_mode or "CLK" in download_mode:
+if "SP3" in download_mode or "CLK" in download_mode or "BIA" in download_mode:
     analysis_name = sys.argv[6]
     solution_type = sys.argv[7]
 
@@ -89,6 +89,22 @@ while count_int > 0:
             dl.download_clk_file_WHU(data_save,WHU,year_int,doy_int,analysis_name,solution_type)
         if "CDDIS" in data_centre:
             dl.download_clk_file_WHU(data_save,CDDIS,year_int,doy_int,analysis_name,solution_type)
+        else:
+            logging.error("{} is not support".format(data_centre))
+    
+    #OSB
+    if "OSB" in download_mode:
+        logging.info("BEGIN BIA Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
+        if "CDDIS" in data_centre:
+            dl.download_osb_file(data_save,CDDIS,year_int,doy_int,analysis_name,solution_type)
+        else:
+            logging.error("{} is not support".format(data_centre))
+    
+    #DCB
+    if "DCB" in download_mode:
+        logging.info("BEGIN BIA Year ={:0>4} , Doy = {:0>3} from {}".format(year_int,doy_int,data_centre))
+        if "CDDIS" in data_centre:
+            dl.download_dcb_file(data_save,CDDIS,year_int,doy_int,analysis_name,solution_type)
         else:
             logging.error("{} is not support".format(data_centre))
     doy_int = doy_int + 1
