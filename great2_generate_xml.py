@@ -154,7 +154,7 @@ def change_inputs_roti(xmlfile = "great2.1.xml",aug_dir = "default",year = 2021,
     tree.write(xmlfile)
 
 #Change XML inputs abs
-def change_inputs_obs(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""]):
+def change_inputs_obs(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395, site_list = [""],site_dic_long = {}):
     tree = et.parse(xmlfile)
     inputs_obs = tree.getroot().find("inputs").find("rinexo")
     day_length = 1
@@ -172,7 +172,10 @@ def change_inputs_obs(xmlfile = "great2.1.xml",obs_dir = "default",year = 2021, 
     while (count_day < day_length):
         day = doy + count_day
         for cur_site in site_list:
-            inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"{:0>3}".format(day),"{}{:0>3}0.{:0>2}o".format(cur_site,day,yy)) + "\n"
+            if cur_site not in site_dic_long:
+                inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"{:0>3}".format(day),"{}{:0>3}0.{:0>2}o".format(cur_site,day,yy)) + "\n"
+            else:
+                inputs_obs.text = inputs_obs.text + "     " + os.path.join(obs_dir,"{:0>3}".format(day),"{}_R_{:0>4}{:0>3}0000_01D_30S_MO.rnx".format(site_dic_long[cur_site],year,day)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -256,6 +259,28 @@ def change_inputs_nav(xmlfile = "great2.1.xml",office = "brdm",nav_dir = "defaul
         count_day = count_day + 1
     tree.write(xmlfile)
 
+#Change XML inputs nav in rnx3 filename
+def change_inputs_nav_rnx3(xmlfile = "great2.1.xml",office = "brdm",nav_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+    tree = et.parse(xmlfile)
+    inputs_nav = tree.getroot().find("inputs").find("rinexn")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_nav.text = "\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        inputs_nav.text = inputs_nav.text + "     " + os.path.join(nav_dir,"{}00IGS_S_{:0>4}{:0>3}0000_01D_MN.rnx".format(office,day,year)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
 #Change XML inputs sp3clk
 def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "default",clk_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
     tree = et.parse(xmlfile)
@@ -279,6 +304,32 @@ def change_inputs_sp3clk(xmlfile = "great2.1.xml",office = "gfz",sp3_dir = "defa
         week = ymd2gpsweekday(int(year),mon,date)
         inputs_sp3.text = inputs_sp3.text + "     " + os.path.join(sp3_dir,"{}{:5d}.sp3".format(office,week)) + "\n"
         inputs_clk.text = inputs_clk.text + "     " + os.path.join(clk_dir,"{}{:5d}.clk".format(office,week)) + "\n"
+        count_day = count_day + 1
+    tree.write(xmlfile)
+
+#Change XML inputs sp3clk in rnx3 filename
+def change_inputs_sp3clk_rnx3(xmlfile = "great2.1.xml",office = "COD",mode = "FIN",sp3_dir = "default",clk_dir = "default",year = 2021, doy = 310, hour = 0, s_length = 86395):
+    tree = et.parse(xmlfile)
+    inputs_sp3 = tree.getroot().find("inputs").find("sp3")
+    inputs_clk = tree.getroot().find("inputs").find("rinexc")
+    day_length = 1
+    hour_length = s_length / 3600
+    while (hour_length >= 24):
+        day_length = day_length + 1
+        hour_length = hour_length - 24
+    hour = hour + hour_length
+    while (hour >= 24):
+        day_length = day_length + 1
+        hour = hour - 24
+    count_day = 0
+    inputs_sp3.text,inputs_clk.text = "\n","\n"
+    yy = year - 2000
+    while (count_day < day_length):
+        day = doy + count_day
+        y_temp,mon,date = doy2ymd(int(year),int(day))
+        week = ymd2gpsweekday(int(year),mon,date)
+        inputs_sp3.text = inputs_sp3.text + "     " + os.path.join(sp3_dir,"{}0MGX{}_{:0>4}{:0>3}0000_01D_05M_ORB.SP3".format(office,mode,year,day)) + "\n"
+        inputs_clk.text = inputs_clk.text + "     " + os.path.join(clk_dir,"{}0MGX{}_{:0>4}{:0>3}0000_01D_30S_CLK.CLK".format(office,mode,year,day)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
@@ -330,11 +381,11 @@ def change_inputs_sys(xmlfile = "great2.1.xml",cur_sys = "GEC"):
             inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
             inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
         else:
-            inputs_atx.text="/cache/hanjunjie/Project/B-IUGG/model/igs_absolute_14.atx"
-            inputs_blq.text="/cache/hanjunjie/Project/A-Paper-1/model/oceanload"
-            inputs_de.text ="/cache/hanjunjie/Project/A-Paper-1/model/jpleph_de405_great"
-            inputs_eop.text="/cache/hanjunjie/Project/B-IUGG/model/poleut1_igmas"
-            inputs_lep.text="/cache/hanjunjie/Project/A-Paper-1/model/leap_seconds"
+            inputs_atx.text="/D6/junjie/Project/B-ZTD_With_IONO/model/igs20_2290.atx"
+            inputs_blq.text="/D6/junjie/Project/B-ZTD_With_IONO/model/oceanload"
+            inputs_de.text ="/D6/junjie/Project/B-ZTD_With_IONO/model/jpleph_de405_great"
+            inputs_eop.text="/D6/junjie/Project/B-ZTD_With_IONO/model/poleut1_2021_2024"
+            inputs_lep.text="/D6/junjie/Project/B-ZTD_With_IONO/model/leap_seconds"
     tree.write(xmlfile)
 
 #Change XML inputs system file for great1
@@ -480,8 +531,8 @@ def change_inputs_upd(xmlfile = "great2.1.xml",upd_dir = "default",year = 2021, 
     inputs_upd.text = "\n"
     while (count_day < day_length):
         day = doy + count_day
-        inputs_upd.text = inputs_upd.text + "     " + os.path.join(upd_dir,"upd_wl_{:0>4}{:0>3}_GEC".format(year,day)) + "\n"
-        inputs_upd.text = inputs_upd.text + "     " + os.path.join(upd_dir,"upd_nl_{:0>4}{:0>3}_GEC".format(year,day)) + "\n"
+        inputs_upd.text = inputs_upd.text + "     " + os.path.join(upd_dir,"upd_wl_{:0>4}{:0>3}_GREC".format(year,day)) + "\n"
+        inputs_upd.text = inputs_upd.text + "     " + os.path.join(upd_dir,"upd_nl_{:0>4}{:0>3}_GREC".format(year,day)) + "\n"
         count_day = count_day + 1
     tree.write(xmlfile)
 
